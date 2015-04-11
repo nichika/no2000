@@ -10,14 +10,14 @@ global $g_entry_type;
 
   <div class="new-entry-thumb">
   <?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
-    <a href="<?php the_permalink(); ?>" class="new-entry-image"><?php the_post_thumbnail( 'thumb320', array('style' => 'width:100%;height:auto;') ); ?></a>
+    <a href="<?php the_permalink(); ?>" class="new-entry-image" title="<?php the_title(); ?>"><?php the_post_thumbnail( 'thumb320', array('alt' => get_the_title()) ); ?></a>
   <?php else: // サムネイルを持っていないときの処理 ?>
-    <a href="<?php the_permalink(); ?>" class="new-entry-image"><img src="<?php echo get_template_directory_uri(); ?>/images/no-image-320" alt="NO IMAGE" title="NO IMAGE" style="width:100%;height:auto;" class="no-image new-list-no-image" /></a>
+    <a href="<?php the_permalink(); ?>" class="new-entry-image"><img src="<?php echo get_template_directory_uri(); ?>/images/no-image-320" alt="NO IMAGE" class="no-image new-list-no-image" /></a>
   <?php endif; ?>
   </div><!-- /.new-entry-thumb -->
 
   <div class="new-entry-content">
-    <a href="<?php the_permalink(); ?>" class="new-entry-title"><?php the_title();?></a>
+    <a href="<?php the_permalink(); ?>" class="new-entry-title" title="<?php the_title(); ?>"><?php the_title();?></a>
   </div><!-- /.new-entry-content -->
 
 </div><!-- /.new-entry -->

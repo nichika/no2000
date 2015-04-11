@@ -2,14 +2,29 @@
 ** ブログカードのスタイル
 ************************************/
 .blog-card{
-  padding:12px;
   margin:20px 0;
+  max-width:100%;
+  width:500px;
+  position:relative;
+  clear:both;
+  min-height:155px;
+  min-width: 300px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.internal-blog-card{
+  padding:12px 12px 0;
   border:1px solid #ddd;
   word-wrap:break-word;
-  max-width:100%;
-  width:474px;
   border-radius:5px;
-  position:relative;
+}
+
+.external-blog-card{
+  border: 0;
+  background-color: transparent;
+  overflow: hidden;
 }
 
 .blog-card img{
@@ -18,6 +33,11 @@
 
 .blog-card-thumbnail{
   float:left;
+}
+
+img.blog-card-thumb-image{
+  width: 100px;
+  height: 100px;
 }
 
 .blog-card-content{

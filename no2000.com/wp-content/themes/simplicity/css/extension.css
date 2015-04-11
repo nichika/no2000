@@ -1,7 +1,13 @@
 /*拡張クラスを追加するスタイルシート*/
 .sankou,
-.reffer{
-
+.sanko,
+.reffer,
+.ref{
+  color: #fff;
+  background-color: #C72527;
+  padding: 1px 3px 0;
+  border-radius: 2px;
+  font-size: 12px;
 }
 
 /*太字*/
@@ -25,6 +31,24 @@
   background-color:#FF9;
 }
 
+/*打ち消し線*/
+.strike{
+  text-decoration: line-through;
+}
+
+/*キーボードキーのスタイル*/
+.keyboard-key {
+  background-color: #f9f9f9;
+  background-image: -moz-linear-gradient(center top , #eee, #f9f9f9, #eee);
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  box-shadow: 1px 2px 2px #ddd;
+  font-family: inherit;
+  font-size: 0.85em;
+  padding: 1px 3px;
+  padding: 1px 3px;
+}
+
 /*ブートストラップのインフォメーションライクな囲みが表示される*/
 .sp-primary {
   background-color: #428BCA;
@@ -34,6 +58,7 @@
   margin-bottom:20px;
 }
 
+/*サクセスメッセージ*/
 .sp-success {
   background-color: #DFF0D8;
   border-color: #D6E9C6;
@@ -42,6 +67,7 @@
   margin-bottom:20px;
 }
 
+/*インフォメッセージ*/
 .sp-info {
   background-color: #D9EDF7;
   border-color: #BCE8F1;
@@ -50,6 +76,7 @@
   margin-bottom:20px;
 }
 
+/*注意メッセージ*/
 .sp-warning {
   background-color: #FCF8E3;
   padding:15px;
@@ -58,6 +85,7 @@
   border-color: #FAEBCC;
 }
 
+/*警告メッセージ*/
 .sp-danger {
   background-color: #F2DEDE;
   border-color: #EBCCD1;

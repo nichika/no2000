@@ -40,10 +40,10 @@
 ** レスポンシブデザインスタイル読込
 ************************************/
 
-@media screen and (max-width:1150px){
+@media screen and (max-width:1110px){
   #navi,
   #navi ul{
     border:0;
   }
-  
+
 }

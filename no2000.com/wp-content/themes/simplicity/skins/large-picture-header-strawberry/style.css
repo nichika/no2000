@@ -12,14 +12,14 @@
   background-size: 100% auto;
 }
 
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 1110px) {
   #header, #header-in, #navi-in, #navi, #navi-in, #body-in, #footer-in {
       width: 740px;
       margin:auto;
   }
 }
 
-@media screen and (min-width: 1151px) {
+@media screen and (min-width: 1111px) {
   #navi ul{
     display:block;
   }
@@ -31,7 +31,7 @@
 
 #navi,
 #navi ul,
-#navi ul.sub-menu, 
+#navi ul.sub-menu,
 #navi ul.children{
   background-color:#BB004B;
   border-color:#BB004B;

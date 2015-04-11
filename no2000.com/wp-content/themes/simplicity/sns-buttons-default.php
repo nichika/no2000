@@ -1,13 +1,13 @@
 <?php //SNSシェアボタン用テンプレート、シェアボタンが表示されるときは全てこのテンプレートが呼び出されます ?>
 <?php if ( is_all_sns_share_btns_visible() ):
   global $g_is_small; ?>
-<div id="sns-buttons" class="sns-buttons-pc">
+<div class="sns-buttons sns-buttons-pc">
   <?php if ( get_share_msg() ): //シェアボタン用のメッセージを取得?>
   <p class="sns-share-msg"><?php echo esc_html( get_share_msg() ) ?></p>
   <?php endif; ?>
   <ul class="snsb clearfix">
     <?php if ( is_twitter_btn_visible() )://Twitterボタンを表示するか ?>
-    <li class="twitter-btn"><a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-url="<?php the_permalink(); ?>" data-text="<?php the_title(); ?>" data-count="<?php echo ($g_is_small ? 'horizontal' : 'vertical') ?>">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+    <li class="twitter-btn"><a href="https://twitter.com/share" class="twitter-share-button" data-via="<?php echo is_twitter_id_include() ? get_twitter_follow_id() : '' ; ?>" data-url="<?php the_permalink(); ?>" data-text="<?php the_title(); ?>" data-count="<?php echo ($g_is_small ? 'horizontal' : 'vertical') ?>">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     </li>
     <?php endif; ?>
     <?php if ( is_facebook_btn_visible() )://Facebookボタンを表示するか ?><li class="facebook-btn"><div id="fb-root"></div><script>(function(d, s, id) {
@@ -24,7 +24,7 @@
     </li>
     <?php endif;?>
     <?php if ( is_hatena_btn_visible() )://はてなボタンを表示するか ?>
-    <li class="hatena-btn"> <a href="http://b.hatena.ne.jp/entry/<?php the_permalink(); ?>" class="hatena-bookmark-button" data-hatena-bookmark-title="<?php the_title(); ?>｜<?php bloginfo('name'); ?>" data-hatena-bookmark-layout="<?php echo ($g_is_small ? 'standard' : 'vertical-balloon') ?>" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" async="async"></script>
+    <li class="hatena-btn"> <a href="http://b.hatena.ne.jp/entry/<?php the_permalink(); ?>" class="hatena-bookmark-button" data-hatena-bookmark-title="<?php the_title(); ?>｜<?php bloginfo('name'); ?>" data-hatena-bookmark-layout="<?php echo ($g_is_small ? 'standard' : 'vertical-balloon') ?>" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" async="async"></script>
     </li>
     <?php endif; ?>
     <?php if ( is_pocket_btn_visible() )://pocketボタンを表示するか ?>
@@ -56,6 +56,7 @@
     </li>
     <?php endif; ?>
     <?php endif; //is_feedly_btn_visible?>
+    <?php get_template_part('sns-button-comments'); ?>
   </ul>
 </div>
 <?php endif; ?>

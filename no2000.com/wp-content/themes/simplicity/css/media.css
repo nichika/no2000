@@ -6,12 +6,13 @@
 ************************************/
 /*動画の最大幅を指定する*/
 .video-container,
-.instagram-container{
+.instagram-container,
+.facebook-container{
   max-width:640px;
 }
 
 /*動画の大きさを調整*/
-.video {
+.video-container .video {
   position: relative;
   padding-bottom: 56.25%;
   padding-top: 30px;
@@ -22,7 +23,16 @@
 }
 
 /*Instagramの大きさを調整*/
-.instagram {
+.instagram-container .instagram {
+  position: relative;
+  padding-bottom: 120%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+
+/*Facebookの大きさを調整*/
+.facebook-container .facebook {
   position: relative;
   padding-bottom: 120%;
   padding-top: 30px;
@@ -36,7 +46,10 @@
 .video embed,
 .instagram iframe,
 .instagram object,
-.instagram embed {
+.instagram embed,
+.facebook iframe,
+.facebook object,
+.facebook embed {
   position: absolute;
   top: 0;
   left: 0;

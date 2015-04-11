@@ -1,12 +1,17 @@
-<!-- パンくずリスト -->
 <?php
+////////////////////////////
+//パンくずリスト
+////////////////////////////
   if (is_category()) {
     get_template_part('breadcrumbs');
   }
 ?>
 
-<!-- アーカイブのタイトル -->
-<?php if (!is_home() && !is_search()) { ?>
+<?php
+////////////////////////////
+//アーカイブのタイトル
+////////////////////////////
+if (!is_home() && !is_search()) { ?>
   <h1 id="archive-title"><q>
     <?php if( is_category() ) { ?>
     <?php single_cat_title(); ?>
@@ -32,17 +37,30 @@
 <?php } ?>
 
 
-<?php if (!is_home() || is_ads_top_page_visible())//メインページ以外は広告を出す
+<?php
+////////////////////////////
+//トップの広告
+////////////////////////////
+if (!is_home() || is_ads_top_page_visible())//メインページ以外は広告を出す
   get_template_part('ad-top');//記事トップ広告 ?>
 
+<?php
+////////////////////////////
+//カテゴリ説明文の挿入
+////////////////////////////
+if (is_category() && //カテゴリページの時
+          !is_paged() &&   //カテゴリページのトップの時
+          category_description()) : //カテゴリの説明文が空でない時 ?>
 <!-- カテゴリの説明文 -->
-<?php if (is_category() && !is_paged() && category_description()) : ?>
 <div class="category-description"><?php echo category_description(); ?></div>
 <?php endif; ?>
 
 <div id="list">
 <!-- 記事一覧 -->
 <?php
+////////////////////////////
+//一覧の繰り返し処理
+////////////////////////////
 if (have_posts()) : // WordPress ループ
   $count = 0;
   while (have_posts()) : the_post(); // 繰り返し処理開始
@@ -50,7 +68,8 @@ if (have_posts()) : // WordPress ループ
     if ( is_list_style_bodies() ) {//一覧表示スタイルが本文表示
       get_template_part('entry-body');//一覧表示スタイルが本文表示の場合
     } else {//サムネイルカードか、大きなサムネイルカードの場合
-      get_template_part('entry-card');//一覧表示スタイルがカードor大きなサムネイルカード表示の場合
+      //一覧表示スタイルがカードor大きなサムネイルカード表示の場合
+      get_template_part('entry-card');
     }
 
     //トップページ中間に広告をできるかどうか（表示するかどうか）
@@ -74,33 +93,4 @@ endif;
   get_template_part('ad-article-footer' );
 endif; ?>
 
-<!--ページャー-->
-<div class="pager">
-  <?php global $wp_rewrite;
-  $paginate_base = get_pagenum_link(1);
-  if(strpos($paginate_base, '?') || ! $wp_rewrite->using_permalinks()){
-    $paginate_format = '';
-    $paginate_base = add_query_arg('paged','%#%');
-  }
-  else{
-    $paginate_format = (substr($paginate_base,-1,1) == '/' ? '' : '/') .
-    user_trailingslashit('page/%#%/','paged');;
-    $paginate_base .= '%_%';
-  }
-
-  if (wp_is_mobile()) {
-    $mid_size = 1;
-  } else {
-    $mid_size = 3;
-  }
-
-  echo paginate_links(array(
-    'base' => $paginate_base,
-    'format' => $paginate_format,
-    'total' => $wp_query->max_num_pages,
-    'mid_size' => $mid_size,
-    'current' => ($paged ? $paged : 1),
-    'prev_text' => '<i class="fa fa-caret-left fa-fx"></i>&#160;',
-    'next_text' => '&#160;<i class="fa fa-caret-right fa-fx"></i>',
-  )); ?>
-</div><!-- /.pager -->
+<?php get_template_part('pager-paginate-links');//エントリーのページャー?>

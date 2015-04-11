@@ -7,7 +7,7 @@
 /************************************
 ** レイアウト
 ************************************/
-#header-in, #navi-in, #body-in, #footer-in {
+div#header-in, div#navi-in, div#body-in, div#footer-in {
   width: 100%;
 }
 
@@ -18,7 +18,7 @@
   border:none;
 }
 
-#sidebar{
+div#sidebar{
   clear:both;
   float:none;
   padding:15px;
@@ -31,16 +31,12 @@
 }
 
 #site-title a{
-  font-size:18px;
-  font-weight:bold;
-  margin-right:120px;
+  font-size:24px;
+  margin-right:45px;
 }
 
 #site-description{
   font-size:14px;
-  line-height:140%;
-  margin-bottom:10px;
-  margin-left:10px;
 }
 
 #main,
@@ -48,6 +44,7 @@
   margin: 0 auto;
   max-width: 720px;
   box-sizing: border-box;
+  float: none !important;
 }
 
 /************************************
@@ -55,7 +52,7 @@
 ************************************/
 #h-top{
   background-image:none !important;
-  background-color:#e7e7e7;
+  /*background-color:#e7e7e7;*/
 }
 
 #header .alignright{
@@ -128,7 +125,7 @@
 .entry-read a,
 .related-entry-read a{
   display:block;
-  width:100%;
+  width: auto;
   background-color:#eee;
   border:1px solid #ddd;
   border-radius:10px;
@@ -139,6 +136,9 @@
   margin-top:18px;
 }
 
+.entry-card .entry-thumb {
+  margin-top: 5px;
+}
 
 .entry-read a:hover,
 .related-entry-read a:hover{
@@ -188,12 +188,17 @@
   display:none;
 }
 
+#mobile-menu{
+  display: block;
+}
+
+/*以前のモバイルメニュー（mobile.css）
 #mobile-menu a{
   font-size:12px;
   padding:5px;
   width:60px;
   border-radius:0 0 7px 7px;
-}
+}*/
 
 
 /************************************
@@ -201,14 +206,10 @@
 ************************************/
 #page-top{
   position:fixed;
-  right:0px;
-  bottom:0px;
   display:none;
 }
+
 #page-top a{
-  border-radius: 0px;
-  border-top-left-radius: 7px;
-  width:60px;
   font-size:12px;
 }
 
@@ -220,8 +221,4 @@
 }
 
 
-/*モバイル画面でレクタングル広告が連続するのを防ぐ*/
-/*.ad-sidebar{
-  margin-top:150px;
-}*/
 

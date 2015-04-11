@@ -31,17 +31,23 @@ function add_ads_before_1st_h2($the_content) {
 }
 add_filter('the_content','add_ads_before_1st_h2');
 
+function get_all_post_count_in_publish(){
+  global $wpdb;
+  return intval($wpdb->get_var("SELECT count(*) FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'"));
+}
+
 //広告をトップページのリスト表示中間に掲載するか
 function is_ads_list_in_middle_on_top_page_enable($count){
   if ( ($count == 3) && //3個目の表示のときのみ
       is_home() && //トップページリストのみ
       !is_paged() && //2ページ目以降でないとき、もしくはレスポンシブ広告の時
-      (wp_is_mobile() || is_responsive_enable() ) && //モバイルの時
+      (is_mobile() || is_responsive_enable() ) && //モバイルの時
       ( intval(get_option('posts_per_page')) >=6 ) && //1ページに表示する最大投稿数が6以上の時
       !is_ads_sidebar_top() && //サイドバー広告が表示されていないとき
       is_ads_performance_visible() &&//パフォーマンス追求広告を表示するとき
       !is_list_style_tile_thumb_cards() && //タイル状リスト表示でないとき
-      is_ads_top_page_visible()//トップページ広告が許可されているとき
+      is_ads_top_page_visible()  &&//トップページ広告が許可されているとき
+      (get_all_post_count_in_publish() > 3)//公開記事が3つより多いとき
   ) {
     return true;
   }
@@ -52,13 +58,13 @@ function is_ads_under_relations_enable(){
   $o = get_option('ads_options');
   if ( ($o['ads_position'] == 'under_relations' || $o['ads_position'] == null ||
      ( $o['ads_position'] == 'content_top' && !is_ads_performance_visible() )  || //関連記事下広告のとき
-      ( wp_is_mobile() && is_ads_in_content() ) || //モバイルの時も広告を表示
-      ( wp_is_mobile() && is_ads_content_top() ) || //モバイルの時も広告を表示
+      ( is_mobile() && is_ads_in_content() ) || //モバイルの時も広告を表示
+      ( is_mobile() && is_ads_content_top() ) || //モバイルの時も広告を表示
       //「本文中広告がオン」でも
       //本文中にH2タグがない時は広告を表示（必ず記事に広告が3つ表示されるように）
       !get_h2_included_in_body( get_the_content() ) ) && //本文中にH2見出しが含まれていないとき
       !is_ads_sidebar_top() &&//サイドバートップに広告が表示されていないとき
-      ( !is_ads_content_top() || wp_is_mobile() ) ||//パソコンでコンテンツ上部広告でないとき
+      ( !is_ads_content_top() || is_mobile() ) ||//パソコンでコンテンツ上部広告でないとき
       is_responsive_enable()
   ) {
     return true;
@@ -73,7 +79,9 @@ function is_ads_sidebar_enable(){
   if ( is_ads_visible() ) {
     if ( is_ads_sidebar_top() && //サイドバー広告のとき
              !is_404() && //404ページじゃないとき
-             ( !is_home() || is_ads_top_page_visible() )//トップページは「トップページ広告が許可」されている時だけ表示
+             ( !is_home() || is_ads_top_page_visible() ) &&//トップページは「トップページ広告が許可」されている時だけ表示
+             !is_mobile_menu_type_slide_in() &&//スライドイン表示でないとき
+             !is_mobile()
     ) {
         return true;
     }
@@ -84,13 +92,13 @@ function is_ads_sidebar_enable(){
 function is_ads_top_banner_enable(){
   if ( is_ads_visible() && is_ads_performance_visible() && !is_responsive_enable() ) {
     if ( is_page() ) {//個別ページのとき
-      if ( wp_is_mobile() ) {
+      if ( is_mobile() ) {
         return true;
       } else {
         return !is_ads_sidebar_top() || is_ads_content_top();//サイドバートップ表示以外のとき
       }
     }elseif ( is_single() ){//投稿ページのとき
-      if ( wp_is_mobile() ) {
+      if ( is_mobile() ) {
         return ( is_ads_in_content() && !get_h2_included_in_body(get_the_content()) ) || //本文中表示設定で本文で表示されていない場合
         is_ads_under_relations() || //関連記事表示のとき
         is_ads_sidebar_top() || //サイドバートップ表示のとき
@@ -99,7 +107,7 @@ function is_ads_top_banner_enable(){
         return is_ads_content_top();//コンテンツトップ表示のとき
       }
     }else{//その他、リスト表示のときなど
-      if ( wp_is_mobile() ) {
+      if ( is_mobile() ) {
         //トップページ以外は必ず表示、トップページは表示がオンになっていたら
         return (!is_home() || is_ads_top_page_visible()) && !is_list_style_bodies();
       } else {

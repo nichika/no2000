@@ -33,7 +33,7 @@ get_header(); ?>
   <?php get_template_part('ad-article-footer');//本文下広告?>
 
   <div id="sns-group">
-  <?php if (wp_is_mobile()) {//モバイルの時は単なるアイコン
+  <?php if (is_mobile()) {//モバイルの時は単なるアイコン
     get_template_part('sns-buttons-icon');
   } else {//PCの時はバルーン付きボタン
     get_template_part('sns-buttons');

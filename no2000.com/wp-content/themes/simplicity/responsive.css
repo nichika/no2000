@@ -18,13 +18,18 @@ ul.snsbs li{
   }
 
   #main{
-    float:none;
     width:auto;
     padding-left:0;
     padding-right:0;
     border-width:0;
     padding:10px;
   }
+
+  #main,
+  #sidebar{
+    float:none !important;
+  }
+
 
   /*マージンによる幅のズレ修正開始*/
   .article h2{

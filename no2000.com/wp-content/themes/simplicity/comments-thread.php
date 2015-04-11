@@ -2,7 +2,7 @@
   <?php
 if(have_comments()):
 ?>
-  <h3 id="resp">『<?php the_title(); ?>』へのコメント</h3>
+  <h3 id="comments">『<?php the_title(); ?>』へのコメント</h3>
   <ol class="commets-list">
     <?php wp_list_comments('callback=mytheme_comment'); ?>
   </ol>

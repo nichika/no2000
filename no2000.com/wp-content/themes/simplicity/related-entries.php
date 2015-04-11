@@ -5,17 +5,18 @@ $query = new WP_Query( $args ); ?>
   <?php while ($query -> have_posts()) : $query -> the_post(); ?>
     <div class="related-entry">
       <div class="related-entry-thumb">
-  <a href="<?php the_permalink() ?>" title="<?php the_title_attribute(); ?>">
+        <a href="<?php the_permalink() ?>" title="<?php the_title(); ?>">
         <?php if ( has_post_thumbnail() ): // サムネイルを持っているとき ?>
-        <?php echo get_the_post_thumbnail($post->ID, 'thumb100', array('style' => 'width:100px;height:100px;', 'class' => 'related-entry-thumb-image') ); //サムネイルを呼び出す?>
+        <?php echo get_the_post_thumbnail($post->ID, 'thumb100', array('class' => 'related-entry-thumb-image', 'alt' => get_the_title()) ); //サムネイルを呼び出す?>
         <?php else: // サムネイルを持っていないとき ?>
-        <img src="<?php echo get_template_directory_uri(); ?>/images/no-image.png" alt="NO IMAGE" title="NO IMAGE" style="width:100px;height:100px;" class="no-image related-entry-no-image" />
+        <img src="<?php echo get_template_directory_uri(); ?>/images/no-image.png" alt="NO IMAGE" class="no-image related-entry-no-image" />
         <?php endif; ?>
         </a>
       </div><!-- /.related-entry-thumb -->
 
       <div class="related-entry-content">
-        <h4 class="related-entry-title"> <a href="<?php the_permalink(); ?>">
+        <h4 class="related-entry-title">
+          <a href="<?php the_permalink(); ?>" class="related-entry-title-link" title="<?php the_title(); ?>">
           <?php the_title(); //記事のタイトル?>
           </a></h4>
         <p class="related-entry-snippet">

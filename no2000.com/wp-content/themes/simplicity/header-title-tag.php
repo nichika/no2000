@@ -23,6 +23,8 @@ elseif(is_search()):
 elseif(is_404()):
   echo'404 - ';
   echo trim( get_bloginfo('name') );
+else:
+  echo trim( wp_title('',false) );
 endif;
 if($paged >= 2 || $page >= 2):
   echo'-'.sprintf('%sページ',

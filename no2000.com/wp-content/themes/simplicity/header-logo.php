@@ -1,8 +1,8 @@
 <?php //サイトのタイトル（タイトルをロゴ画像に変更するカスタマイズなど） ?>
 <!-- サイトのタイトル -->
-<?php if ( is_header_logo_enable() )://ヘッダーロゴを画像にする場合
+<?php if ( get_header_logo_url() )://ヘッダーロゴを画像が設定されている場合
     $logo_url = ( get_header_logo_url() ? get_header_logo_url() : get_stylesheet_directory_uri().'/images/logo.png' );//ロゴ画像の取得
-    $site_title = '<a href="'.home_url('/').'"><img src="'.$logo_url.'" alt="'.get_bloginfo('name').'" class="site-title-img" /></a><span class="invisible" style="display:none;">'.get_bloginfo('name').'</span>';
+    $site_title = '<a href="'.home_url('/').'"><img src="'.$logo_url.'" alt="'.get_bloginfo('name').'" class="site-title-img" /></a>';
   else://ロゴがテキストの場合（デフォルト）
     $site_title = '<a href="'.home_url('/').'">'.get_bloginfo('name').'</a>';
   endif;

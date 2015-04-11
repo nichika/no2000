@@ -18,59 +18,35 @@ jQuery(function(){
   //ボタン(id:move-page-top)のクリックイベント
   jQuery('#move-page-top').click(function(){
   //ページトップへ移動する
-  jQuery('body,html').animate({
-          scrollTop: 0
-      }, 800);
+    jQuery('body,html').animate({
+            scrollTop: 0
+        }, 800);
   });
 });
 
 /////////////////////////////////
 //スクロール追従
 /////////////////////////////////
-(function(jquery) {
-//  var wrapperTop = 0;
-//  //-------------------------------------------------
-//  //非同期の読み込みでサイドバーの高さが変わるため
-//  //スクロール追従エリア作動場所がずれるのを防ぐ処理
-//  //※ここらへんの処理は重くはないはずだけど酷い
-//  //（良い方法があったら教えてください）
-//  function getWrapperTop() {
-//    var side = jQuery('#sidebar-widget'); // サイドバーのID
-//    wrapperTop = side.outerHeight();
-//    console.log(wrapperTop);
-//  }
-//
-//  //5秒後にもスクロール追従領域の高さを取得
-//  setTimeout(function(){
-//    getWrapperTop();
-//  },5000);
-//
-//  //10秒後にもスクロール追従領域の高さを取得
-//  setTimeout(function(){
-//    getWrapperTop();
-//  },10000);
-//
-//  //20秒後にもスクロール追従領域の高さを取得
-//  setTimeout(function(){
-//    getWrapperTop();
-//  },20000);
-//
-//  //30秒後にもスクロール追従領域の高さを取得
-//  setTimeout(function(){
-//    getWrapperTop();
-//  },30000);
-//
-//  //60秒後にもスクロール追従領域の高さを取得
-//  setTimeout(function(){
-//    getWrapperTop();
-//  },60000);
-//
-//  //何もかも読み込んだ後のスクロール追従領域の高さを取得
-//  jQuery(window).load(function(){
-//    getWrapperTop();
-//  })
-//  //-------------------------------------------------
+var wrapperTop;//追従エリアのトップ位置を格納（追従開始位置
+var wrapperHeight;//追従エリアの高さを格納
+var sidebarHeight;//サイドバーの高さを格納
+// var wrapperHeightAtFirst;
+// var wrapperHeightDiff;
+// var sidebarHeightAtFirst;
+// var sidebarHeightDiff;
+//非同期ブログパーツがあっても追従開始位置がずれないように修正（無理やり）
+//スマートな良い方法があれば、ご教授お願いします。
+function getScrollAreaSettings(){
+  wrapperHeight = jQuery('#sidebar-scroll').outerHeight();
+  sidebarHeight = jQuery('#sidebar').outerHeight();
+  // wrapperHeightDiff = wrapperHeightAtFirst - wrapperHeight;
+  // sidebarHeightDiff = sidebarHeightAtFirst - sidebarHeight;
+  wrapperTop = sidebarHeight - wrapperHeight + 240;
+  // console.log(wrapperTop + ', ' + wrapperHeight + ', ' + sidebarHeight + ', ' + sidebarHeightAtFirst + ', ' + sidebarHeightDiff);
+}
+setInterval('getScrollAreaSettings()',2000);
 
+(function(jquery) {
   jquery(document).ready(function() {
     /*
     Ads Sidewinder
@@ -79,7 +55,7 @@ jQuery(function(){
     var main = jQuery('#main'); // メインカラムのID
     var side = jQuery('#sidebar'); // サイドバーのID
     var wrapper = jQuery('#sidebar-scroll'); // スクロール追従要素のID
-    var side_top_margin = 40;
+    var side_top_margin = 60;
     if (!wrapper.size()) {return;}//スクロール追従エリアにウイジェットが入っていないときはスルー
     if (side.css('clear') == 'both') {return;}//レスポンシブでサイドバーをページ下に表示しているときはスルー
 
@@ -88,7 +64,9 @@ jQuery(function(){
     }
 
     var w = jquery(window);
-    var wrapperHeight = wrapper.outerHeight();
+    wrapperHeight = wrapper.outerHeight();
+    // wrapperHeightAtFirst =  wrapperHeight;
+    // sidebarHeightAtFirst =  side.outerHeight();
     wrapperTop = wrapper.offset().top;//とりあえずドキュメントを読み込んだ時点でスクロール追従領域の高さを取得
     var sideLeft = side.offset().left;
     //console.log(wrapperTop);
@@ -183,27 +161,17 @@ jQuery(document).ready(function() {
   jQuery('#mobile-menu-toggle').click(function(){
     header_menu = jQuery('#navi ul');
     if (header_menu.css('display') == 'none') {
-      //header_menu.removeClass('display-hide').addClass('display-block');
       header_menu.slideDown();
     } else{
-      //header_menu.removeClass('display-block').addClass('display-hide');
       header_menu.slideUp();
     };
   });
 
 });
 
-/////////////////////////////////
-// imgタグからwidth、height、border属性を削除
-/////////////////////////////////
-//jQuery(document).ready(function(jQuery){
-//  jQuery('img').each(function(){
-//    jQuery(this).removeAttr('width')
-//    jQuery(this).removeAttr('height');
-//    jQuery(this).removeAttr('border');
-//  });
-//});
-
+///////////////////////////////////
+// ソーシャルボタンカウントの非同期取得
+///////////////////////////////////
 jQuery(function(){
   jQuery(window).scroll(function(){
     //console.log(jQuery('#sidebar').css('clear'));
@@ -243,200 +211,6 @@ jQuery(function(){
   });
 });
 
-///////////////////////////////////
-////レスポンスに表示時のメニューの挙動
-///////////////////////////////////
-//jQuery(function(){
-//  jQuery(window).resize(function(){
-//    if ( jQuery(window).width() > 1150 ) {
-//      jQuery('ul.menu').show();
-//      jQuery('.menu > ul').show();
-//      //console.log(jQuery('#navi ul.sub-menu').css('display'));
-//      if ( jQuery('#navi ul.sub-menu').css('display') == 'block' ||
-//           jQuery('#navi ul.children').css('display') == 'block' ) {
-//        jQuery('#navi ul.sub-menu').hide();//removeClass('display-block').addClass('display-hide');
-//        jQuery('#navi ul.children').hide();//removeClass('display-block').addClass('display-hide');
-//      };
-//    }else{
-//      jQuery('ul.menu').hide();
-//      jQuery('.menu > ul').hide();
-//    };
-//  })
-//});
-
-/////////////////////////////////
-//コメントからvcardの削除
-/////////////////////////////////
-//jQuery(function(){
-//  jQuery('.comment-author').removeClass('vcard');
-//});
-
-/////////////////////////////////
-////Instagram、Amazonコンテナのクラス付け替え
-/////////////////////////////////
-//jQuery(function(){
-//  //srcにinstagramが含まれているiframe要素を探す
-//  jQuery('.video-container .video iframe[src*="instagram"]').each(function(){
-//    //親コンテナ要素のclassの付け替え
-//    jQuery(this).parent().removeClass('video').addClass('instagram');
-//    //親の親コンテナ要素のclassの付け替え
-//    jQuery(this).parent().parent().removeClass('video-container').addClass('instagram-container');
-//  });
-//  //srcにAmazonが含まれているiframe要素を探す
-//  jQuery('.video-container .video iframe[src*="amazon"]').each(function(){
-//    //親コンテナ要素のclassの付け替え
-//    jQuery(this).parent().removeClass('video').css('display', 'inline');
-//    //親の親コンテナ要素のclassの付け替え
-//    jQuery(this).parent().parent().removeClass('video-container').css('display', 'inline');
-//  });
-//});
-
-//全画像の左寄せ解除
-//jQuery(function(){
-//  jQuery('.article img.alignleft').removeClass('alignleft');
-//});
-
-
-//var $;
-//    $ = jQuery;
-//
-//SNS = {
-//  ajax: function (surl,query){
-//    var def = $.Deferred();
-//    $.ajax({
-//      type: "GET",
-//      url: surl,
-//      data: query,
-//      dataType: 'jsonp',
-//    success: def.resolve,
-//    error: def.reject
-//    });
-//    return def.promise();
-//  },
-//  twitter: function(url){
-//    var def = $.Deferred();
-//    $.ajax({
-//      type: "GET",
-//      url: 'http://urls.api.twitter.com/1/urls/count.json',
-//      data: {  "url": url },
-//      dataType: "jsonp",
-//      success: def.resolve,
-//      error: def.reject
-//    });
-//    return def.promise();
-//  },
-//  twitterShow: function (selecter,count){
-//    jQuery( selecter ).text( count );
-//  },
-//  feedly: function (surl,query){
-//    var def = $.Deferred();
-//    $.ajax({
-//      type: "GET",
-//      url: surl,
-//      data: query,
-//      dataType: 'html',
-//    success: def.resolve,
-//    error: def.reject
-//    });
-//    return def.promise();
-//  },
-//};
-//
-//// Twitterの反応（ツイートやリツイート数）を取得
-//function get_social_count_twitter(url, selcter) {
-//  var surl,query;
-//  surl = 'http://urls.api.twitter.com/1/urls/count.json';
-//  query = { url: url };
-//
-//    SNS.twitter(url,query).done(function(data){
-//      //jQuery( selcter ).text( data.count || 0 );
-//      SNS.twitterShow(selcter, (data.count || 0));
-//      return true;
-//    });
-//    /* こちらでも動きます
-//    SNS.ajax(surl,query).done(function(data){
-//      jQuery( selcter ).text( data.count || 0 );
-//
-//    });
-//    */
-//}
-//
-//// Facebookの反応（いいねとシェアの数）を取得
-//function get_social_count_facebook(url, selcter) {
-//  var surl = 'https://graph.facebook.com/' + url;
-//  var query = "";
-//
-//    SNS.ajax(surl,query).done(function(data){
-//      jQuery( selcter ).text( data.shares || 0 );
-//    }).fail(function(jqXHR, textStatus, errorThrown){
-//      console.log("fb: ",textStatus);
-//      //jQuery( selcter ).text( '0' );
-//    });
-//}
-//
-////Google＋のシェア数を取得
-//function get_social_count_googleplus(url, selcter) {
-//  var query, SURL,surl, tmpQuery1;
-//
-//       SURL = "http://query.yahooapis.com/v1/public/yql?env=http://datatables.org/alltables.env&format=xml&q="
-//  tmpQuery1 = "SELECT content FROM data.headers WHERE url='"
-//        + "https://plusone.google.com/_/+1/fastbutton?hl=ja&url=" + url
-//        + "' and ua='Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.1)'";
-//      query = "";
-//      surl = SURL + encodeURIComponent(tmpQuery1);
-//
-//    SNS.ajax(surl,query).done(function(json){
-//      //console.log(json);
-//      var count, m, _ref;
-//            count = 0;
-//            if (((_ref = json.query) != null ? _ref.count : void 0) > 0) {
-//              m = json.results[0].match(/window\.__SSR = {c: ([\d]+)/);
-//              if (m != null) {
-//                count = m[1];
-//              }
-//            }
-//    jQuery( selcter ).text(count);
-//  });
-//}
-//
-////はてなブックマークでシェア数を取得
-//function get_social_count_hatebu(url, selcter) {
-//  var surl,query;
-//
-//  surl = 'http://api.b.st-hatena.com/entry.count';
-//  query = { url: url };
-//
-//  SNS.ajax(surl,query).done(function(data){
-//    jQuery( selcter ).text( data || 0 );
-//  })
-//}
-//
-////ポケットのストック数を取得
-//function get_social_count_pocket(url, selcter) {
-//  var SURL,query,tmpQuery1;
-//
-//  SURL = "http://query.yahooapis.com/v1/public/yql?env=http://datatables.org/alltables.env&format=xml&q=";
-//  tmpQuery1 = "SELECT content FROM data.headers WHERE url='"
-//        + "https://widgets.getpocket.com/v1/button?label=pocket&count=vertical&v=1&url=" + url
-//        + "' and ua='Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 5.1)'";
-//  surl = SURL + encodeURIComponent(tmpQuery1) + "&r=" + (Math.random() * 100000000);
-//  query = "";
-//
-//  SNS.ajax(surl,query).done(function(json){
-//    var count, m, _ref;
-//            count = 0;
-//            if (((_ref = json.query) != null ? _ref.count : void 0) > 0) {
-//              m = json.results[0].match(/em id="cnt"&gt;(\d+)&lt;/);
-//              if (m != null) {
-//                count = m[1];
-//              }
-//            }
-//
-//    jQuery( selcter ).text(count);
-//  });
-//}
-
-//一旦戻す
 // Twitterのシェア数を取得
 function get_social_count_twitter(url, selcter) {
   jQuery.ajax({
@@ -547,13 +321,48 @@ function get_social_count_feedly(rss_url, selcter) {
   });
 }
 
+function doMasonry() {
+  jQuery('#list').masonry({ //<!-- #listは記事一覧を囲んでる部分 -->
+    itemSelector: '.entry', //<!--.entryは各記事を囲んでる部分-->
+    isAnimated: true //<!--アニメーションON-->
+  });
+}
+
+jQuery(function(){
+  if (typeof social_count_config !== 'undefined') {
+    get_social_count_twitter(social_count_config.permalink, '.twitter-count');
+    get_social_count_facebook(social_count_config.permalink, '.facebook-count');
+    get_social_count_googleplus(social_count_config.permalink, '.googleplus-count');
+    get_social_count_hatebu(social_count_config.permalink, '.hatebu-count');
+    get_social_count_pocket(social_count_config.permalink, '.pocket-count');
+    get_social_count_feedly(social_count_config.rss2_url, '.feedly-count');
+  }
+
+  if (typeof lazyload_config !== 'undefined') {
+    jQuery('img').lazyload(lazyload_config);
+  }
+});
+
+jQuery(window).load(function(){
+  if (typeof do_masonry !== 'undefined') {
+    doMasonry()
+  }
+});
+jQuery(function(){
+  if (typeof do_masonry !== 'undefined') {
+    doMasonry()
+  }
+});
+
 ///////////////////////////////////
-////レスポンスに表示時のメニューの挙動
+// レスポンス表示時のメニューの挙動
+// メニューのスタイル表示崩れの防止
 ///////////////////////////////////
 jQuery(function(){
   jQuery(window).resize(function(){
-    if ( jQuery(window).width() > 1150 ) {
+    if ( jQuery(window).width() > 1110 ) {
       jQuery('#navi-in ul').removeAttr('style');
     };
   });
 });
+

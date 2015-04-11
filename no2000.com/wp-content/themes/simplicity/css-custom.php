@@ -13,7 +13,10 @@ $mobile_site_description_color = get_theme_mod( 'mobile_site_description_color',
 $navi_color = get_theme_mod( 'navi_color', NAVI_COLOR);
 $navi_link_color = get_theme_mod( 'navi_link_color', NAVI_LINK_COLOR);
 $navi_link_hover_color = get_theme_mod( 'navi_link_hover_color', NAVI_LINK_HOVER_COLOR);
-$guide_button_color = get_theme_mod( 'guide_button_color', GUIDE_BUTTON_COLOR);
+$menu_button_color = get_theme_mod( 'menu_button_color', MENU_BUTTON_COLOR);
+$menu_button_background_color = get_theme_mod( 'menu_button_background_color', MENU_BUTTON_BACKGROUND_COLOR);
+$go_to_top_button_color = get_theme_mod( 'go_to_top_button_color', GO_TO_TOP_BUTTON_COLOR);
+$go_to_top_button_background_color = get_theme_mod( 'go_to_top_button_background_color', GO_TO_TOP_BUTTON_BACKGROUND_COLOR);
 $footer_color = get_theme_mod( 'footer_color', FOOTER_COLOR);
 ?>
 <style type="text/css">
@@ -41,31 +44,31 @@ a:hover,
 }
 <?php endif; ?>
 <?php //ヘッダー外側背景色
-if ( $header_outer_background_color != HEADER_OUTER_BACKGROUND_COLOR && !wp_is_mobile() ): ?>
+if ( $header_outer_background_color != HEADER_OUTER_BACKGROUND_COLOR && !is_mobile() ): ?>
 #header {
   background-color:<?php echo $header_outer_background_color; ?>;
 }
 <?php endif; ?>
 <?php //ヘッダー内側背景色
-if ( $header_inner_background_color != HEADER_INNER_BACKGROUND_COLOR && !wp_is_mobile() ): ?>
+if ( $header_inner_background_color != HEADER_INNER_BACKGROUND_COLOR && !is_mobile() ): ?>
 #header-in {
   background-color:<?php echo $header_inner_background_color; ?>;
 }
 <?php endif; ?>
 <?php //サイトタイトル色
-if ( $site_title_color != SITE_TITLE_COLOR && !wp_is_mobile() ): ?>
+if ( $site_title_color != SITE_TITLE_COLOR && !is_mobile() ): ?>
 #site-title a {
   color:<?php echo $site_title_color; ?>;
 }
 <?php endif; ?>
 <?php //サイト概要色
-if ( $site_description_color != SITE_DESCRIPTION_COLOR && !wp_is_mobile() ): ?>
+if ( $site_description_color != SITE_DESCRIPTION_COLOR && !is_mobile() ): ?>
 #site-description {
   color:<?php echo $site_description_color; ?>;
 }
 <?php endif; ?>
 <?php //モバイルヘッダー色
-if ( $mobile_background_color != MOBILE_BACKGROUND_COLOR && wp_is_mobile() ): ?>
+if ( $mobile_background_color != MOBILE_BACKGROUND_COLOR && is_mobile() ): ?>
 #header #h-top {
   background-color:<?php echo $mobile_background_color; ?>;
 }
@@ -101,7 +104,7 @@ echo NAVI_COLOR."\n";*/
   border-width: 1px 0;
 }
 <?php endif;//$navi_color?>
-@media screen and (max-width:1150px){
+@media screen and (max-width:1110px){
   #navi{
     background-color: transparent;
   }
@@ -137,11 +140,11 @@ if ( is_sidebar_left() ): ?>
   <?php endif; ?>
 }
 
-@media screen and (max-width:1150px){
+/*@media screen and (max-width:1110px){
   #sidebar{
     float:none;
   }
-}
+}*/
 <?php else: //サイドバーが左じゃないとき?>
 <?php //シェアバーが広告にかぶらないようにする
 if ( is_ads_performance_visible() ): ?>
@@ -151,28 +154,39 @@ if ( is_ads_performance_visible() ): ?>
 <?php endif;//is_ads_performance_visible ?>
 <?php endif;//is_sidebar_left ?>
 <?php //モバイルサイトタイトル色
-if ( $mobile_site_title_color != SITE_TITLE_COLOR && wp_is_mobile() ): ?>
+if ( $mobile_site_title_color != SITE_TITLE_COLOR && is_mobile() ): ?>
 #site-title a {
   color:<?php echo $mobile_site_title_color; ?>;
 }
 <?php endif; ?>
 <?php //モバイルサイト概要色
-if ( $mobile_site_description_color != SITE_DESCRIPTION_COLOR && wp_is_mobile() ): ?>
+if ( $mobile_site_description_color != SITE_DESCRIPTION_COLOR && is_mobile() ): ?>
 #site-description {
   color:<?php echo $mobile_site_description_color; ?>;
 }
 <?php endif; ?>
-<?php //ガイドボタン色
-if ( $guide_button_color != GUIDE_BUTTON_COLOR): ?>
-#mobile-menu a,
-#page-top a {
-  background-color:<?php echo $guide_button_color; ?>;
+<?php //メニューボタン色
+if ( $menu_button_color != MENU_BUTTON_COLOR): ?>
+#mobile-menu a {
+  color:<?php echo $menu_button_color; ?>;
 }
-
-#mobile-menu a:hover,
-#page-top a:hover {
-  background-color:<?php echo $guide_button_color; ?>;
-  opacity:0.7;
+<?php endif; ?>
+<?php //メニューボタン背景色
+if ( $menu_button_background_color != MENU_BUTTON_BACKGROUND_COLOR): ?>
+#mobile-menu a {
+  background-color:<?php echo $menu_button_background_color; ?>;
+}
+<?php endif; ?>
+<?php //トップへ戻るボタン色
+if ( $go_to_top_button_color != GO_TO_TOP_BUTTON_COLOR): ?>
+#page-top a {
+  color:<?php echo $go_to_top_button_color; ?>;
+}
+<?php endif; ?>
+<?php //トップへ戻るボタン背景色
+if ( $go_to_top_button_background_color != GO_TO_TOP_BUTTON_BACKGROUND_COLOR): ?>
+#page-top a {
+  background-color:<?php echo $go_to_top_button_background_color; ?>;
 }
 <?php endif; ?>
 <?php //フッター色
@@ -182,7 +196,7 @@ if ( $footer_color != FOOTER_COLOR): ?>
 }
 <?php endif; ?>
 <?php //ヘッダーの高さ
-if ( get_header_height() != 100 && (!wp_is_mobile() || is_responsive_enable()) ): ?>
+if ( get_header_height() != 100 && (!is_mobile() || is_responsive_enable()) ): ?>
 #h-top {
   min-height:<?php echo get_header_height(); ?>px;
 }
@@ -196,27 +210,35 @@ if ( is_ads_center() ): ?>
 <?php //フォローボタンに色をつける
 if ( is_colored_follow_btns() ): ?>
 ul.snsp li.twitter-page a{
-  color:#55ACEE;
+  color: #55acee !important;
 }
 
 ul.snsp li.facebook-page a{
-  color:#3C5A99;
+  color: #3b5998 !important;
 }
 
 ul.snsp li.google-plus-page a{
-  color:#DD4B39;
+  color: #dd4b39 !important;
 }
 
 ul.snsp li.instagram-page a{
-  color:#AB7F66;
+  color: #ab7f66 !important;
+}
+
+ul.snsp li.pinterest-page a{
+  color: #cc2127 !important;
+}
+
+ul.snsp li.youtube-page a{
+  color: #e52d27 !important;
 }
 
 ul.snsp li.feedly-page a{
-  color:#87BD33;
+  color: #87bd33 !important;
 }
 
 ul.snsp li.rss-page a{
-  color:#FE9900;
+  color: #fe9900 !important;
 }
 
 ul.snsp li a:hover{
@@ -267,12 +289,12 @@ blockquote{
   margin-left:-29px;
   margin-right:-29px;
 }
-<?php if ( wp_is_mobile() ): ?>
+<?php if ( is_mobile() ): ?>
 blockquote{
   margin-left:0;
   margin-right:0;
 }
-<?php endif; //wp_is_mobile?>
+<?php endif; //is_mobile?>
 <?php endif; //is_blockquote_wide?>
 <?php //サムネイル表示
 if ( !is_thumbnail_visible() ): ?>
@@ -300,9 +322,15 @@ if ( !is_thumbnail_visible() ): ?>
 }
 <?php endif; ?>
 <?php //本文文字サイズ
-if ( get_article_font_size() != ARTICLE_FONT_SIZE): ?>
+if ( (get_article_font_size() != ARTICLE_FONT_SIZE) && !is_mobile() ): ?>
 .article {
   font-size:<?php echo get_article_font_size(); ?>px;
+}
+<?php endif; ?>
+<?php //モバイル本文文字サイズ
+if ( is_mobile() ): ?>
+.article {
+  font-size:<?php echo get_article_mobile_font_size(); ?>px;
 }
 <?php endif; ?>
 <?php //サイドバーの幅を336pxにするかどうか
@@ -312,47 +340,27 @@ if ( is_sidebar_width_336() ): ?>
 #sidebar{
   width: 336px;
 }
-#header-in, #body-in, #footer-in{
+#header-in, #navi-in, #body-in, #footer-in{
   width: 1106px;
 }
 
-#navi-in{
-  width: 1104px;/*ボーダーの分2pxを差し引く*/
-}
-
-/* 画面幅が1151px以下の時 */
-@media screen and (max-width:1150px){
-  #header, #header-in, #navi, #navi-in, #body-in, #footer-in{
-    width:740px;
-  }
-
-  #header, #navi{
-    margin: 0 auto;
+/* 画面幅が1110px以下の時 */
+/*@media screen and (max-width:1110px){
+  #header-in, #navi-in, #body-in, #footer-in {
+    width: 740px;
   }
 
   #sidebar{
     width: auto;
-    padding: 0 auto;
   }
+}*/
 
-}
-
-/* 画面幅が1151px以上の時 */
-@media screen and (min-width:1151px){
-  #header, #navi, #navi ul{display:block;}
-}
-<?php if ( wp_is_mobile() ): ?>
-#header, #h-top{
-  min-height: 100px;
-  width: 100%;
+<?php if ( is_mobile() && !is_responsive_enable() ): ?>
+#header, #header-in, #navi-in, #body-in, #footer-in, #sidebar {
+  width:100%;
 }
 
-#navi{
-  border: 0;
-  margin: 0;
-  width: 100%;
-}
-<?php endif; //wp_is_mobile?>
+<?php endif; //is_mobile?>
 <?php endif; //is_sidebar_width_336?>
 <?php if ( is_list_style_large_thumb_cards() ): //大きなサムネイル表示の場合?>
 #main .entry{
@@ -368,6 +376,7 @@ if ( is_sidebar_width_336() ): ?>
   float: none;
   margin-right: 0;
   text-align:center;
+  margin-bottom:0;
 }
 
 .entry-thumb img{
@@ -380,6 +389,7 @@ if ( is_sidebar_width_336() ): ?>
 
 .entry h2{
   margin-top:0;
+  padding-top: 5px;
   font-size:18px;
   overflow:hidden;
 }
@@ -410,7 +420,8 @@ if ( is_thumbnail_radius_10px() ): ?>
 .related-entry-thumb img,
 #new-entries ul li img,
 #popular-entries ul li img,
-#prev-next img{
+#prev-next img,
+#new-entries .new-entrys-large .new-entry img{
   border-radius:10px;
 }
 <?php endif; ?>
@@ -421,7 +432,8 @@ if ( is_thumbnail_circle() ): ?>
 .related-entry-thumb img,
 #new-entries ul li img,
 #popular-entries ul li img,
-#prev-next img{
+#prev-next img,
+#new-entries .new-entrys-large .new-entry img{
   border-radius:50%;
 }
 <?php endif; ?>
@@ -446,8 +458,8 @@ if ( is_list_style_tile_thumb_cards() ): ?>
 }
 
 .entry-thumb img{
-  width:100% !important;
-  height:auto !important;
+  width:100%;
+  height:auto;
   margin-bottom:0;
 }
 
@@ -485,6 +497,7 @@ if ( is_list_style_tile_thumb_cards() ): ?>
 .entry h2{
   padding:0 5px;
   word-wrap:break-word;
+  line-height: 100%;
 }
 
 .entry-read a.entry-read-link{
@@ -495,6 +508,7 @@ if ( is_list_style_tile_thumb_cards() ): ?>
   width:auto;
 }
 
+
 <?php if ( is_list_style_tile_thumb_3columns_style() ): ?>
 @media screen and (max-width:471px){
   #main .entry{
@@ -503,8 +517,8 @@ if ( is_list_style_tile_thumb_cards() ): ?>
   }
 
   .entry-thumb img{
-    width:100% !important;
-    height:auto !important;
+    width:100%;
+    height:auto;
   }
 
   .entry h2 a{
@@ -522,7 +536,7 @@ if ( is_list_style_tile_thumb_cards() ): ?>
 }
 
 .entry-thumb img{
-  width:328px !important;
+  width:328px;
 }
 
 .entry h2 a{
@@ -533,14 +547,14 @@ if ( is_list_style_tile_thumb_cards() ): ?>
   font-size:16px;
 }
 
-@media screen and (max-width:360px){
+@media screen and (max-width:440px){
   #main .entry{
     width:100%;
     margin:5px 0;
   }
 
   .entry-thumb img{
-    width:100% !important;
+    width:100%;
   }
 
   .entry h2 a{
@@ -569,7 +583,7 @@ if ( is_ads_vatical_rectangle() ): ?>
 }
 <?php endif; ?>
 <?php //PCトップ広告をカスタムサイズ広告
-if ( is_ads_custum_ad_space() && !wp_is_mobile() ): ?>
+if ( is_ads_custum_ad_space() && !is_mobile() ): ?>
 /*カスタムサイズ広告用レイアウト*/
 .ad-top-pc {
   margin-left:0;
@@ -581,8 +595,8 @@ if ( is_ads_custum_ad_space() && !wp_is_mobile() ): ?>
 if ( is_blog_card_width_auto() ): ?>
 /*ブログカードをカラム幅いっぱいにする*/
 .blog-card {
-  width:auto;
-  margin:20px;
+  width: calc(100% - 40px);
+  margin: 20px;
 }
 <?php endif; ?>
 <?php //ヘッダー外側の背景画像URLが設定されているとき
@@ -592,22 +606,38 @@ if ( get_header_outer_background_image() ): ?>
   background-image: url("<?php echo get_header_outer_background_image(); ?>");
   background-position: 0 0;
   background-size: 100% auto;
+  background-repeat: no-repeat;
 }
-<?php if ( !wp_is_mobile() ): ?>
-@media screen and (max-width: 1150px) {
+<?php if ( !is_mobile() ): ?>
+@media screen and (max-width: 1110px) {
   #header, #header-in, #navi-in, #navi, #navi-in, #body-in, #footer-in {
       width: 740px;
       margin:auto;
   }
 }
 
-@media screen and (min-width: 1151px) {
+@media screen and (min-width: 1111px) {
   #navi ul{
     display:block;
   }
 }
-<?php endif; //!wp_is_mobile?>
+<?php endif; //!is_mobile?>
 <?php endif; //get_header_outer_background_image?>
+<?php //モバイルヘッダーの背景画像URLが設定されているとき
+if ( get_mobile_header_background_image() ): ?>
+<?php if ( is_mobile() ): ?>
+/*モバイルヘッダーのスタイルの設定*/
+#header {
+  background-image: url("<?php echo get_mobile_header_background_image(); ?>");
+  background-position: 0 0;
+  background-size: 100% auto;
+}
+
+#h-top{
+  background-color: transparent !important;
+}
+<?php endif; //!is_mobile ?>
+<?php endif; //get_mobile_header_background_image ?>
 <?php //関連記事のサムネイルが4列表示のとき
 if ( is_related_entry_type_thumbnail4() ): ?>
 /*関連記事のサムネイルが4列表示*/
@@ -621,8 +651,8 @@ if ( is_related_entry_type_thumbnail4() ): ?>
 }
 
 .related-entry-thumbnail img {
-  height: auto !important;
-  width: 160px !important;
+  width: 160px;
+  height: auto;
 }
 <?php endif; ?>
 <?php //ブログカードのサムネイルを右側にする
@@ -635,6 +665,81 @@ if ( is_blog_card_thumbnail_right() ): ?>
 .blog-card-content {
   margin-left: 0;
   margin-right: 110px;
+}
+
+@media screen and (max-width:440px){
+  .blog-card-content {
+    margin-right: 0;
+  }
+  .blog-card-title {
+    margin-left: 0;
+  }
+}
+<?php endif; ?>
+<?php //画像効果はボーダーか
+if ( is_image_effect_border1px() ): ?>
+/*画像効果ボーダー*/
+#the-content > p > img,
+#the-content > p > a > img {
+  border: 1px solid #ddd;
+}
+<?php endif; ?>
+<?php //画像効果はシャドーか
+if ( is_image_effect_shadow() ): ?>
+/*画像効果シャドー*/
+#the-content > p > img,
+#the-content > p > a > img {
+  box-shadow:5px 5px 15px #ddd;
+}
+<?php endif; ?>
+<?php //サイトタイトルの中央寄せをするか
+if ( is_title_center() ): ?>
+/*サイトタイトルを中央寄せ*/
+#header .alignleft {
+    text-align: center;
+    max-width: none;
+    width: calc(100% - 60px);
+}
+
+#h-top #site-title a{
+  margin-right: 0 !important;
+}
+
+#site-description{
+  margin-right: 0;
+}
+
+#header .alignright {
+    display: none;
+}
+<?php endif; ?>
+<?php //サイドバーの背景色を白色にするか
+if ( is_sidebar_background_white() ): ?>
+/*サイドバーの背景色を白色*/
+#sidebar{
+  background-color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+}
+<?php endif; ?>
+<?php //モバイルのシェアボタンをバイラルにするか
+if ( is_share_button_type_mobile_viral() && is_mobile() ): ?>
+/*モバイルのシェアボタン*/
+@media screen and (max-width:740px){
+  .sns-group-viral ul.snsb li a {
+      width: 130px;
+      margin-bottom: 0;
+  }
+}
+<?php endif; ?>
+<?php //サイドバートップに広告を表示しているときモバイルで広告が2つかぶらないようにする
+if ( false && is_ads_sidebar_top() && is_mobile() ): ?>
+.ad-article-bottom {
+    margin-bottom: 200px;
+}
+
+#sidebar .ad-space-sidebar {
+    margin-top: 250px;
 }
 <?php endif; ?>
 </style>

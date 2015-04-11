@@ -24,6 +24,11 @@
 
   <?php if ( is_single() ) get_template_part('sns-buttons-top');//タイトル下の小さなシェアボタン?>
 
+  <?php if ( is_single() && is_active_sidebar( 'widget-over-article' ) ):
+    //投稿本文上ウイジェット
+    dynamic_sidebar( 'widget-over-article' );
+  endif; ?>
+
 
   <?php if ( has_post_thumbnail() && is_eye_catch_visible() ): // サムネイルを持っているときの処理 ?>
   <div class="eye-catch"><?php the_post_thumbnail('large'); ?></div>
@@ -34,7 +39,7 @@
     the_content( get_theme_text_read_more() ); //デフォルト：続きを読む?>
   </div>
 
-  <?php if ( is_single() ) get_template_part('page-link');?>
+  <?php if ( is_single() ) get_template_part('pager-page-links');//ページリンクのページャー?>
 
   <?php if ( is_single() && is_active_sidebar( 'widget-under-article' ) ):
     //投稿本文下ウイジェット
@@ -43,10 +48,19 @@
 
   <?php if ( is_single() ) get_template_part('ad-article-footer');?>
 
+
+  <?php if ( is_single() && is_active_sidebar( 'widget-over-sns-buttons' ) ) :
+    //投稿SNSボタン上ウイジェット
+    dynamic_sidebar( 'widget-over-sns-buttons' );
+  endif;?>
+
+
   <div id="sns-group" class="sns-group sns-group-bottom">
   <?php if ( is_single() ) get_template_part('sns-buttons'); //SNSシェアボタンの取得?>
 
-  <?php if ( is_single() ) get_template_part('sns-pages'); //SNSフォーローボタンの取得?>
+  <?php if ( is_single() &&
+             is_body_bottom_follows_visible() ) //記事下フォローボタン表示のとき
+               get_template_part('sns-pages'); //SNSフォーローボタンの取得?>
   </div>
 
   <?php if ( is_single() && is_active_sidebar( 'widget-under-sns-buttons' ) ) :

@@ -1,7 +1,7 @@
 <?php if ( is_ads_visible() ): //広告表示がオンのとき?>
   <!-- 広告 -->
   <?php if ( is_responsive_enable() ): //完全レスポンスの場合?>
-    <?php if ( wp_is_mobile() ): //スマートフォンの場合?>
+    <?php if ( is_mobile() ): //スマートフォンの場合?>
       <?php if ( is_active_sidebar( 'adsense-300' ) ) :  ?>
         <div class=" ad-space">
           <div class="ad-label"><?php echo get_ads_label() ?></div>
@@ -17,7 +17,7 @@
       <?php endif; ?>
     <?php endif; ?>
   <?php else: //レスポンシブじゃない時?>
-    <?php if ( wp_is_mobile() ): //スマートフォンの場合?>
+    <?php if ( is_mobile() ): //スマートフォンの場合?>
       <?php if ( is_active_sidebar( 'adsense-300' ) ) :  ?>
         <div class=" ad-space">
           <div class="ad-label"><?php echo get_ads_label() ?></div>

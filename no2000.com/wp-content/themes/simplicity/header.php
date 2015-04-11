@@ -15,7 +15,6 @@ if ( get_webmaster_tool_id() ): ?>
 <?php get_template_part('header-seo');//SEOの設定テンプレート?>
 <?php get_template_part('header-css');//CSS関連の記述まとめテンプレート?>
 <?php wp_enqueue_script('jquery');//jQueryの読み込み?>
-<?php wp_head(); ?>
 <?php get_template_part('header-css-mobile-responsive');//モバイル時、レスポンシブ時のCSS関連ファイル読み込みテンプレート（本来ならheader-css.phpに一つにまとめたいところだけど、このテンプレート（モバイル関連の記述）をここで読み込まないとモバイルで表示が崩れるサーバもあったので、あえて分けて書いてあります。?>
 <?php get_template_part('header-javascript');//JavaScript関連の記述まとめテンプレート?>
 <?php if ( is_facebook_ogp_enable() ) //Facebook OGPタグ挿入がオンのとき
@@ -23,6 +22,8 @@ if ( get_webmaster_tool_id() ): ?>
 <?php if ( is_twitter_cards_enable() ) //Twitterカードタグ挿入がオンのとき
   get_template_part('header-twitter-card');//Twitterカード用のタグテンプレート?>
 <?php get_template_part('header-insert');//ユーザーが子テーマからヘッダーに何か記述したい時に利用するテンプレート?>
+<?php get_template_part('head-custom-field');//カスタムフィールドの挿入（カスタムフィールド名：head_custom）?>
+<?php wp_head(); ?>
 </head>
   <body <?php body_class(); ?>>
     <div id="container">
@@ -37,20 +38,15 @@ if ( get_webmaster_tool_id() ): ?>
             $h_top_style = ' style="background-image:url('.get_header_image().')"';
           } ?>
           <div id="h-top"<?php echo $h_top_style; ?>>
-            <?php if ( is_navi_visible() ): ?>
-            <!-- モバイルメニュー表示用のボタン -->
-            <div id="mobile-menu">
-              <a id="mobile-menu-toggle" href="#"><i class="fa <?php echo get_menu_button_icon_font(); //Font Awesomeアイコンフォントの取得 ?> fa-2x"></i></a>
-            </div>
-            <?php endif; ?>
+            <?php get_template_part('button-menu'); //モバイルメニューボタンの呼び出し?>
 
-            <div class="alignleft">
+            <div class="alignleft top-title-catchphrase">
               <?php get_template_part('header-logo');?>
             </div>
 
-            <div class="alignright">
+            <div class="alignright top-sns-follows">
               <?php  if ( is_top_follows_visible() ): //トップのフォローボタンを表示するか?>
-              <?php get_template_part('sns-pages');?>
+              <?php get_template_part('sns-pages'); //SNSフォローボタンの呼び出し?>
               <?php endif; ?>
             </div>
 

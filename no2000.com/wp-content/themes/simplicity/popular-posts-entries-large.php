@@ -1,8 +1,10 @@
 <?php //PVを元にした人気記事 ?>
 
 <?php //グローバル変数の呼び出し
+global $g_widget_mode;//ウィジェットモード（全て表示するか、カテゴリ別に表示するか）
 global $g_entry_count;//エントリー数
 global $g_entry_type;//表示タイプ
+global $g_is_pages_include; //固定ページの表示
 global $g_is_views_visible;//閲覧数を表示するかどうか
 global $g_range;//集計期間
 global $g_widget_item;//このテンプレートを利用するウイジェットアイテム
@@ -11,7 +13,9 @@ global $g_widget_item;//このテンプレートを利用するウイジェッ�
 <?php
 //「Simplicity同カテゴリーの人気エントリー」ウイジェットを使用している時だけカテゴリを絞る
 $now_id = null;
-if ($g_widget_item == 'SimplicityPopularPostsCategoryWidgetItem'):
+$post_type = $g_is_pages_include ? null : 'post_type="post"&';
+if ($g_widget_item == 'SimplicityPopularPostsCategoryWidgetItem' &&
+    $g_widget_mode == 'category')://ウィジェットモードが「カテゴリ別表示」のとき
   if ( is_single() ) {//投稿ページでは全カテゴリー取得
     $categories = get_the_category();
     $category_IDs = array();
@@ -44,8 +48,9 @@ if (function_exists('wpp_get_mostpopular')):
   thumbnail_height='.$thumbnail_height.'&
   cat="'.$now_id.'"&
   wpp_start=""&
-  wpp_end=""&
-  post_start=""&
+  wpp_end=""&'.
+  $post_type.
+  'post_start=""&
   post_end=""&
   stats_comments=0&
   stats_views='.($g_is_views_visible ? 1 : 0).'';

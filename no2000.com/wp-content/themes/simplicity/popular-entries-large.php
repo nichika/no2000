@@ -11,14 +11,14 @@ global $g_entry_type;
 
   <div class="popular-entry-thumb">
   <?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
-    <a href="<?php the_permalink(); ?>" class="popular-entry-link"><?php the_post_thumbnail( 'thumb320', array('style' => 'width:100%;height:auto;') ); ?></a>
+    <a href="<?php the_permalink(); ?>" class="popular-entry-link" title="<?php the_title(); ?>"><?php the_post_thumbnail( 'thumb320', array('alt' => get_the_title()) ); ?></a>
   <?php else: // サムネイルを持っていないときの処理 ?>
-    <a href="<?php the_permalink(); ?>" class="popular-entry-image"><img src="<?php echo get_template_directory_uri(); ?>/images/no-image-320.png" alt="NO IMAGE" title="NO IMAGE" style="width:100%;height:auto;" class="no-image popular-list-no-image" /></a>
+    <a href="<?php the_permalink(); ?>" class="popular-entry-image" title="<?php the_title(); ?>"><img src="<?php echo get_template_directory_uri(); ?>/images/no-image-320.png" alt="NO IMAGE" class="no-image popular-list-no-image" /></a>
   <?php endif; ?>
   </div><!-- /.popular-entry-thumb -->
 
   <div class="popular-entry-content">
-    <a href="<?php the_permalink(); ?>" class="popular-entry-title"><?php the_title();?></a>
+    <a href="<?php the_permalink(); ?>" class="popular-entry-title" title="<?php the_title(); ?>"><?php the_title();?></a>
   </div><!-- /.popular-entry-content -->
 
 </div><!-- /.popular-entry -->

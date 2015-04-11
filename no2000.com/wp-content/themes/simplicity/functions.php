@@ -3,8 +3,12 @@ include 'lib/customizer.php';//テーマカスタマイザー関係の関数
 include 'lib/widget.php';//ウイジェット関係の関数
 include 'lib/ad.php';    //広告関係の関数
 include 'lib/sns.php';  //SNS関係の関数
+include 'lib/admin.php';  //管理画面用の関数
+include 'lib/auto-post-thumbnail.php';  //自作のユーティリティー関数
 include 'lib/utility.php';  //自作のユーティリティー関数
 require_once(ABSPATH . 'wp-admin/includes/file.php');//WP_Filesystemの使用
+
+define('URL_REG', '/(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/');
 
 // アイキャッチ画像を有効化
 add_theme_support('post-thumbnails');
@@ -58,9 +62,9 @@ register_sidebars(1,
   array(
   'name'=>'スクロール追従領域',
   'id' => 'sidebar-scroll',
-  'description' => 'サイドバーで下にスクロールすると追いかけてくるエリアです。※モバイルでは表示されません。（ここにGoogle AdSenseを張るのはポリシー違反です。）',
-  'before_widget' => '',
-  'after_widget' => '',
+  'description' => 'サイドバーで下にスクロールすると追いかけてくるエリアです。※モバイルでは表示されません。（ここにGoogle AdSenseを貼るのはポリシー違反です。）',
+  'before_widget' => '<div id="%1$s" class="widget %2$s">',
+  'after_widget' => '</div>',
   'before_title' => '<h4>',
   'after_title' => '</h4>',
 ));
@@ -72,7 +76,7 @@ register_sidebars(1,
   'description' => '336×280pxの広告を入力してください。',
   'before_widget' => '',
   'after_widget' => '',
-  'before_title' => '<div class="widget-ad" style="display:none">',
+  'before_title' => '<div class="widget-ad">',
   'after_title' => '</div>',
 ));
 
@@ -83,7 +87,7 @@ register_sidebars(1,
   'description' => '300×250pxの広告を入力してください。',
   'before_widget' => '',
   'after_widget' => '',
-  'before_title' => '<div class="widget-ad" style="display:none">',
+  'before_title' => '<div class="widget-ad">',
   'after_title' => '</div>',
 ));
 
@@ -102,7 +106,7 @@ if ( is_ads_performance_visible() ):
     'description' => $adw_desc,
     'before_widget' => '',
     'after_widget' => '',
-    'before_title' => '<div class="widget-ad" style="display:none">',
+    'before_title' => '<div class="widget-ad">',
     'after_title' => '</div>',
   ));
 
@@ -113,7 +117,7 @@ if ( is_ads_performance_visible() ):
     'description' => '広告が2つしか表示されていないモバイルページのトップにラージモバイルバナーを表示します。320×100のラージモバイルバナー推奨です。完全レスポンシブのときは設定しても表示されません。（デフォルト状態をなるべくシンプルにするためカスタマイザーから設定しないと、このウイジェット設定は表示されません。）',
     'before_widget' => '',
     'after_widget' => '',
-    'before_title' => '<div class="widget-ad" style="display:none">',
+    'before_title' => '<div class="widget-ad">',
     'after_title' => '</div>',
   ));
 endif;
@@ -126,10 +130,21 @@ endif;
 //    'description' => 'レスポンシブ広告設置用のウイジェットです。',
 //    'before_widget' => '',
 //    'after_widget' => '',
-//    'before_title' => '<div class="widget-ad" style="display:none">',
+//    'before_title' => '<div class="widget-ad">',
 //    'after_title' => '</div>',
 //  ));
 //endif;
+
+register_sidebars(1,
+  array(
+  'name'=>'投稿本文上',
+  'id' => 'widget-over-article',
+  'description' => '投稿本文上に表示されるウイジェット。設定しないと表示されません。',
+  'before_widget' => '<div class="widget-over-article">',
+  'after_widget' => '</div>',
+  'before_title' => '<div class="widget-over-article-title">',
+  'after_title' => '</div>',
+));
 
 register_sidebars(1,
   array(
@@ -138,7 +153,18 @@ register_sidebars(1,
   'description' => '投稿本文下に表示されるウイジェット。設定しないと表示されません。',
   'before_widget' => '<div class="widget-under-article">',
   'after_widget' => '</div>',
-  'before_title' => '<div class="widget-under-article-title" style="display:none">',
+  'before_title' => '<div class="widget-under-article-title">',
+  'after_title' => '</div>',
+));
+
+register_sidebars(1,
+  array(
+  'name'=>'投稿SNSボタン上',
+  'id' => 'widget-over-sns-buttons',
+  'description' => '投稿のメインカラムの一番下となるSNSボタンの上に表示されるウイジェット。広告を表示している場合は、広告の下になります。設定しないと表示されません。',
+  'before_widget' => '<div class="widget-over-sns-buttons">',
+  'after_widget' => '</div>',
+  'before_title' => '<div class="widget-over-sns-buttons-title">',
   'after_title' => '</div>',
 ));
 
@@ -149,7 +175,7 @@ register_sidebars(1,
   'description' => '投稿のメインカラムの一番下となるSNSボタンの下に表示されるウイジェット。設定しないと表示されません。',
   'before_widget' => '<div class="widget-under-sns-buttons">',
   'after_widget' => '</div>',
-  'before_title' => '<div class="widget-under-sns-buttons-title" style="display:none">',
+  'before_title' => '<div class="widget-under-sns-buttons-title">',
   'after_title' => '</div>',
 ));
 
@@ -158,8 +184,8 @@ register_sidebars(1,
   'name'=>'フッター左',
   'id' => 'footer-left',
   'description' => 'フッター左側のウィジットエリアです。',
-  'before_widget' => '',
-  'after_widget' => '',
+  'before_widget' => '<div id="%1$s" class="widget %2$s">',
+  'after_widget' => '</div>',
   'before_title' => '<h4>',
   'after_title' => '</h4>',
 ));
@@ -169,8 +195,8 @@ register_sidebars(1,
   'id' => 'footer-center',
   'name'=>'フッター中',
   'description' => 'フッター中間のウィジットエリアです。',
-  'before_widget' => '',
-  'after_widget' => '',
+  'before_widget' => '<div id="%1$s" class="widget %2$s">',
+  'after_widget' => '</div>',
   'before_title' => '<h4>',
   'after_title' => '</h4>',
 ));
@@ -180,8 +206,8 @@ register_sidebars(1,
   'name'=>'フッター右',
   'id' => 'footer-right',
   'description' => 'フッター右側フッター中のウィジットエリアです。',
-  'before_widget' => '',
-  'after_widget' => '',
+  'before_widget' => '<div id="%1$s" class="widget %2$s">',
+  'after_widget' => '</div>',
   'before_title' => '<h4>',
   'after_title' => '</h4>',
 ));
@@ -248,13 +274,14 @@ function get_the_custom_excerpt($content, $length, $is_card = false) {
     return  $post->post_excerpt;
   } else {//Simplicity固有の抜粋文を使用するとき
     $length = ($length ? $length : 70);//デフォルトの長さを指定する
-    $content =  preg_replace('/<!--more-->.+/is',"",$content); //moreタグ以降削除
+    $content =  preg_replace('/<!--more-->.+/is', '', $content); //moreタグ以降削除
     $content =  strip_shortcodes($content);//ショートコード削除
     $content =  strip_tags($content);//タグの除去
-    $content =  str_replace("&nbsp;","",$content);//特殊文字の削除（今回はスペースのみ）
-    $content =  preg_replace('/\s/iu',"",$content); //余分な空白を削除
+    $content =  str_replace('&nbsp;', '', $content);//特殊文字の削除（今回はスペースのみ）
+    $content =  preg_replace(URL_REG, '', $content); //URLを取り除く
+    // $content =  preg_replace('/\s/iu',"",$content); //余分な空白を削除
     $over    =  intval(mb_strlen($content)) > intval($length);
-    $content =  mb_substr($content,0,$length);//文字列を指定した長さで切り取る
+    $content =  mb_substr($content, 0, $length);//文字列を指定した長さで切り取る
     if ( get_excerpt_more() && $over ) {
       $content = $content.get_excerpt_more();
     }
@@ -289,7 +316,7 @@ function the_favicon_tag(){
 
 //アップルタッチアイコンを表示
 function the_apple_touch_icon_tag(){
-  if ( is_apple_touch_icon_enable() && wp_is_mobile() ) {
+  if ( is_apple_touch_icon_enable() && is_mobile() ) {
     if ( get_apple_touch_icon_url() ) {
       echo '<link rel="apple-touch-icon-precomposed" href="'.get_apple_touch_icon_url().'" />'."\n";
     } else {
@@ -317,6 +344,8 @@ function wrap_iframe_in_div($the_content) {
     $the_content = preg_replace('/<iframe[^>]+?youtube\.com[^<]+?<\/iframe>/is', '<div class="video-container"><div class="video">${0}</div></div>', $the_content);
     //Instagram動画にラッパーを装着
     $the_content = preg_replace('/<iframe[^>]+?instagram\.com[^<]+?<\/iframe>/is', '<div class="instagram-container"><div class="instagram">${0}</div></div>', $the_content);
+    //Facebook埋め込みにラッパーを装着
+    //$the_content = preg_replace('/<iframe[^>]+?www\.facebook\.com[^<]+?<\/iframe>/is', '<div class="facebook-container"><div class="facebook">${0}</div></div>', $the_content);
   }
   return $the_content;
 }
@@ -324,15 +353,14 @@ add_filter('the_content','wrap_iframe_in_div');
 
 //サイト概要の取得
 function get_the_description(){
-  $o = get_sns_options();
-  if ($o['ogp_description'] == 'meta') {
-    global $post;//All in One SEO PackプラグインのDescriptionを取得
-    $s = get_post_meta($post->ID, _aioseop_description, true);
-  } else {
-    $s = strip_shortcodes(get_the_excerpt());
-    $s = mb_substr(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($s)), 0, 100);
+  global $post;
+  $desc = trim(strip_tags( $post->post_excerpt ));
+  if ( !$desc ) {//投稿で抜粋が設定されていない場合は、110文字の冒頭の抽出分
+    $desc = strip_shortcodes(get_the_custom_excerpt( $post->post_content, 150 ));
+
   }
-  return $s;
+  $desc = mb_substr(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($desc)), 0, 110);
+  return $desc;
 }
 
 //WordPress の投稿スラッグを自動的に生成する
@@ -542,6 +570,7 @@ function get_related_wp_query_args(){
 }
 
 //本文中のURLをブログカードタグに変更する
+if ( !function_exists( 'url_to_blog_card' ) ):
 function url_to_blog_card($the_content) {
   if ( is_singular() ) {//投稿ページもしくは固定ページのとき
     //1行にURLのみが期待されている行（URL）を全て$mに取得
@@ -566,33 +595,64 @@ function url_to_blog_card($the_content) {
       if ( is_wordpress_excerpt() ) {//Wordpress固有の抜粋のとき
         $excerpt = $exce;
       } else {
-        $excerpt = get_the_custom_excerpt($post_id->post_content, 80);//抜粋の取得
+        $excerpt = get_the_custom_excerpt($post_id->post_content, get_excerpt_length());//抜粋の取得
       }
-      $target = is_blog_card_target_blank() ? ' target="_blank"' : '';//新しいタブで開く場合
-      $hatebu = is_blog_card_hatena_visible() ? '<span class="blog-card-hatebu"><a href="http://b.hatena.ne.jp/entry/'.$url.'"'.$target.'><img src="http://b.hatena.ne.jp/entry/image/'.$url.'" alt="" /></a></span>' : '';//はてブを表示する場合
-      $site_logo = is_blog_card_site_logo_visible() ? '<div class="blog-card-site"><span class="blog-card-favicon"><img src="'.get_the_favicon_url().'" class="blog-card-favicon-img" /></span><a href="'.get_bloginfo('url').'"'.$target.'>'.get_bloginfo('name').'</a></div>' : '';//サイトロゴを表示する場合
-      $thumbnail = get_the_post_thumbnail($id, 'thumb100', array('style' => 'width:100px;height:100px;', 'class' => 'blog-card-thumb-image'));//サムネイルの取得（要100×100のサムネイル設定）
+      //新しいタブで開く場合
+      $target = is_blog_card_target_blank() ? ' target="_blank"' : '';
+      //はてブを表示する場合
+      $hatebu = is_blog_card_hatena_visible() ? '<span class="blog-card-hatebu"><a href="http://b.hatena.ne.jp/entry/'.$url.'"'.$target.'><img src="http://b.hatena.ne.jp/entry/image/'.$url.'" alt="はてブ数" /></a></span>' : '';
+      //サイトロゴを表示する場合
+      $favicon_tag = '';
+      if ( is_favicon_enable() && get_the_favicon_url() ) {//ファビコンが有効か確認
+        $favicon_tag = '<span class="blog-card-favicon"><img src="'.get_the_favicon_url().'" class="blog-card-favicon-img" alt="ファビコン" /></span>';
+      }
+      $site_logo = is_blog_card_site_logo_visible() ? '<div class="blog-card-site">'.$favicon_tag.'<a href="'.get_bloginfo('url').'"'.$target.'>'.get_bloginfo('name').'</a></div>' : '';
+      //サムネイルの取得（要100×100のサムネイル設定）
+      $thumbnail = get_the_post_thumbnail($id, 'thumb100', array('class' => 'blog-card-thumb-image', alt => $title));
       if ( !$thumbnail ) {//サムネイルが存在しない場合
-        $thumbnail = '<img src="'.get_template_directory_uri().'/images/no-image.png" style="width:100px;height:100px;" />';
+        $thumbnail = '<img src="'.get_template_directory_uri().'/images/no-image.png" alt="'.$title.'" class="blog-card-thumb-image" />';
       }
       //取得した情報からブログカードのHTMLタグを作成
-      $tag = '<div class="blog-card"><div class="blog-card-thumbnail"><a href="'.$url.'" class="blog-card-thumbnail-link"'.$target.'>'.$thumbnail.'</a></div><div class="blog-card-content"><div class="blog-card-title"><a href="'.$url.'" class="blog-card-title-link"'.$target.'>'.$title.'</a></div><div class="blog-card-excerpt">'.$excerpt.'</div></div><div class="blog-card-footer">'.$site_logo.'<span class="blog-card-date">'.$date.'</span>'.$hatebu.'</div></div>';
+      $tag = '<div class="blog-card internal-blog-card"><div class="blog-card-thumbnail"><a href="'.$url.'" class="blog-card-thumbnail-link"'.$target.'>'.$thumbnail.'</a></div><div class="blog-card-content"><div class="blog-card-title"><a href="'.$url.'" class="blog-card-title-link"'.$target.'>'.$title.'</a></div><div class="blog-card-excerpt">'.$excerpt.'</div></div><div class="blog-card-footer">'.$site_logo.'<span class="blog-card-date">'.$date.'</span>'.$hatebu.'</div></div>';
+      //本文中のURLをブログカードタグで置換
+      $the_content = preg_replace('{'.preg_quote($match).'}', $tag , $the_content, 1);
+      wp_reset_postdata();
+    }
+  }
+  return $the_content;//置換後のコンテンツを返す
+}
+endif;
+if ( is_blog_card_enable() ) {
+  add_filter('the_content','url_to_blog_card');//本文表示をフック
+}
+
+//本文中のURLをはてなブログカードタグに変更する
+if ( !function_exists( 'url_to_hatena_blog_card' ) ):
+function url_to_hatena_blog_card($the_content) {
+  if ( is_singular() ) {//投稿ページもしくは固定ページのとき
+    //1行にURLのみが期待されている行（URL）を全て$mに取得
+    $res = preg_match_all('/^(<p>)?(<a.+?>)?https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+(<\/a>)?(<\/p>)?(<br ? \/>)?$/im', $the_content,$m);
+    //マッチしたURL一つ一つをループしてカードを作成
+    foreach ($m[0] as $match) {
+      $url = strip_tags($match);//URL
+
+      //サイトの内部リンクは処理しない場合
+      if ( strpos( $url, get_this_site_domain() ) ) {
+       continue ;
+      }
+
+      //取得した情報からブログカードのHTMLタグを作成
+      $tag = '<'.'iframe '.'class="blog-card external-blog-card"'.' src="http://hatenablog.com/embed?url='.$url.'"></'.'iframe'.'>';
       //本文中のURLをブログカードタグで置換
       $the_content = preg_replace('{'.preg_quote($match).'}', $tag , $the_content, 1);
     }
   }
   return $the_content;//置換後のコンテンツを返す
 }
-if ( is_blog_card_enable() ) {
-  add_filter('the_content','url_to_blog_card');//本文表示をフック
+endif;
+if ( is_blog_card_external_enable() ) {//外部リンクブログカードが有効のとき
+  add_filter('the_content','url_to_hatena_blog_card');//本文表示をフック
 }
-
-////Twitterのユーザー名を自動的にリンク
-//function twitter_id_replace($content) {
-//$twtreplace = preg_replace('/([^a-zA-Z0-9-_&])@([0-9a-zA-Z_]+)/',"$1<a href=\"http://twitter.com/$2\" target=\"_blank\" rel=\"nofollow\">@$2</a>",$content);
-//return $twtreplace;
-//}
-//add_filter('the_content', 'twitter_id_replace');
 
 //アップロード可能なファイルの設定
 function my_upload_mimes($mimes = array()) {
@@ -674,17 +734,8 @@ $example_update_checker = new ThemeUpdateChecker(
 'http://wp-simplicity.com/wp-content/themes/simplicity/update-info.json' //JSONファイルのURL
 );
 
-// //WidthやHeight属性を削除
-// function remove_width_attribute( $html ) {
-//    $html = preg_replace( '/(width|height)="\d*"\s/', "", $html );
-//    return $html;
-// }
-// add_filter( 'post_thumbnail_html', 'remove_width_attribute', 10 );
-// add_filter( 'image_send_to_editor', 'remove_width_attribute', 10 );
-
 // functions.php(子テーマのでも可)に追加
 function my_comment_form_defaults($defaults){
-//  'comment_field'        => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true"></textarea></p>',
     $defaults['comment_field'] = '<p class="comment-form-comment"><textarea id="comment" class="expanding" name="comment" cols="45" rows="8" aria-required="true" placeholder=""></textarea></p>';
     return $defaults;
 }
@@ -693,7 +744,7 @@ add_filter( "comment_form_defaults", "my_comment_form_defaults");
 //画像タグにLazyLoad用の属性などを追加
 function add_image_tag_placeholders( $content ) {
     //プレビューやフィードモバイルなどで遅延させない
-    if( is_feed() || is_preview() || wp_is_mobile() )
+    if( is_feed() || is_preview() || is_mobile() )
         return $content;
 
     //既に適用させているところは処理しない
@@ -717,7 +768,7 @@ if ( is_lazy_load_enable() ) {//Lazy Loadが有効の場合のみ
 //画像リンクのAタグをLightboxに対応するように付け替え
 function add_lightbox_property( $content ) {
   //プレビューやフィードで表示しない
-  if( is_feed() || is_preview() || wp_is_mobile() )
+  if( is_feed() || is_preview() || is_mobile() )
     return $content;
 
   //既に適用させているところは処理しない
@@ -726,7 +777,7 @@ function add_lightbox_property( $content ) {
 
   //Aタグを正規表現で置換
   $content = preg_replace(
-    '/<a([^>]+?(\.jpg|\.png|\.gif)[\'\"][^>]*?)>\s*(<img[^>]+?>)\s*<\/a>/i',//Aタグの正規表現
+    '/<a([^>]+?(\.jpe?g|\.png|\.gif)[\'\"][^>]*?)>\s*(<img[^>]+?>)\s*<\/a>/i',//Aタグの正規表現
     '<a${1} data-lightbox="image-set">${3}</a>',//置換する
     $content );//投稿本文（置換する文章）
 
@@ -734,4 +785,68 @@ function add_lightbox_property( $content ) {
 }
 if ( is_lightbox_enable() ) {
   add_filter( 'the_content', 'add_lightbox_property', 11 );
+}
+
+//thickboxを呼び出さない
+function deregister_thickbox_files() {
+  wp_dequeue_style( 'thickbox' );
+  wp_dequeue_script( 'thickbox' );
+}
+
+add_action( 'wp_enqueue_scripts', 'deregister_thickbox_files' );
+
+//Android Chromeで&nbsp;が・に表示される不具合対策
+function replace_nbsp_to_ensp($the_content) {
+  if ( is_singular() ) {
+    $the_content = str_replace('&nbsp;', '&ensp;', $the_content);
+  }
+  return $the_content;
+}
+add_filter('the_content','replace_nbsp_to_ensp');
+
+
+//本文から必要のないものを取り除くフック
+function remove_unnecessary_sentences($the_content) {
+  if ( is_singular() ) {
+    //border属性は不要
+    $the_content = str_replace(' border="0"', '', $the_content);
+    $the_content = str_replace(" border='0'", '', $the_content);
+  }
+  return $the_content;
+}
+add_filter('the_content','remove_unnecessary_sentences');
+
+//タブレットをモバイルとしないモバイル判定関数
+if ( !function_exists( 'is_mobile' ) ):
+//スマホ表示分岐
+function is_mobile(){
+  if ( is_tablet_mobile() ) {
+    return wp_is_mobile();
+  }
+  $useragents = array(
+    'iPhone', // iPhone
+    'iPod', // iPod touch
+    'Android.*Mobile', // 1.5+ Android *** Only mobile
+    'Windows.*Phone', // *** Windows Phone
+    'dream', // Pre 1.5 Android
+    'CUPCAKE', // 1.5+ Android
+    'blackberry9500', // Storm
+    'blackberry9530', // Storm
+    'blackberry9520', // Storm v2
+    'blackberry9550', // Storm v2
+    'blackberry9800', // Torch
+    'webOS', // Palm Pre Experimental
+    'incognito', // Other iPhone browser
+    'webmate' // Other iPhone browser
+  );
+  $pattern = '/'.implode('|', $useragents).'/i';
+  return preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
+}
+endif;
+
+//カスタムフィールドのショートコードをロケーションURIに置換
+function replace_directory_uri($code){
+  $code = str_replace('[template_directory_uri]', get_template_directory_uri(), $code);
+  $code = str_replace('[stylesheet_directory_uri]', get_stylesheet_directory_uri(), $code);
+  return $code;
 }

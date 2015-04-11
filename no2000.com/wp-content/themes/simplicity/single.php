@@ -6,7 +6,7 @@
     while (have_posts()) : the_post(); // 繰り返し処理開始
       get_template_part('entry-body'); //本文記事の呼び出し?>
 
-      <section>
+      <section id="under-entry-body">
 
       <?php if ( is_related_entry_visible() ): //関連記事を表示するか?>
       <div id="related-entries">
@@ -28,9 +28,9 @@
       <?php
         if ( is_post_navi_visible() ) {//「前の記事」「次の記事」を表示するか
           if ( is_post_navi_type_default() ) {//「前の記事」「次の記事」ナビタイプはデフォルトか
-            get_template_part('post-navi'); //デフォルトナビのテンプレート
+            get_template_part('pager-post-navi'); //デフォルトナビのテンプレート
           } else {//「前の記事」「次の記事」ナビタイプはサムネイルか
-            get_template_part('post-navi-thumbnail'); //サムネイルナビのテンプレート
+            get_template_part('pager-post-navi-thumbnail'); //サムネイルナビのテンプレート
           }
         }
       ?>

@@ -1,6 +1,7 @@
 <!-- sidebar -->
 <aside>
 <div id="sidebar">
+  <?php get_template_part('button-slide-sidebar-close');//スライドサイドバー用の閉じるボタン ?>
   <?php get_template_part('ad-sidebar');//サイドバートップ広告の呼び出し ?>
 
   <div id="sidebar-widget">
@@ -10,7 +11,7 @@
   endif;?>
   </div>
 
-  <?php if (is_active_sidebar('sidebar-scroll') && !wp_is_mobile() ): ?>
+  <?php if (is_active_sidebar('sidebar-scroll') && !is_mobile() ): ?>
   <!--スクロール追従領域-->
   <div id="sidebar-scroll">
     <?php dynamic_sidebar('sidebar-scroll');?>

@@ -83,4 +83,10 @@
 .bbr-resolution-sticker{
 
 }
-
+@media screen and (max-width: 440px){
+  #bbpress-forums div.bbp-forum-content,
+  #bbpress-forums div.bbp-topic-content,
+  #bbpress-forums div.bbp-reply-content{
+    margin-left: 10px !important;
+  }
+}

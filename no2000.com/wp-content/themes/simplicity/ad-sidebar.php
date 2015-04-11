@@ -1,5 +1,5 @@
 <?php if ( is_ads_sidebar_enable() ): //広告をサイドバーに掲載するか?>
-  <?php if ( is_sidebar_width_336() && !wp_is_mobile() ): ?>
+  <?php if ( is_sidebar_width_336() && !is_mobile() ): ?>
     <?php if ( is_active_sidebar( 'adsense-336' ) ): ?>
     <div class="ad-space ad-space-sidebar">
         <div class="ad-label"><?php echo get_ads_label() ?></div>

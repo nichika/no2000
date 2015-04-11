@@ -1,19 +1,27 @@
 @charset "UTF-8";
+/*開発中は開発効率重視で@importを利用するけどいずれは取り除きたい[TODO]*/
 @import url("css/feedly.css");/*feedlyバルーンのスタイル*/
 @import url("css/blog-card.css");/*ブログカードのスタイル*/
 @import url("css/extension.css");/*拡張CSSのスタイル*/
 @import url("css/other.css");/*外部パーツ微調整*/
 @import url("css/sns.css");/*SNSボタンなどのスタイル*/
+
 /*
-Theme Name: Simplicity1.4.0
+Theme Name: Simplicity1.6.1
 Description: Simplicityの意味は、単純、簡単、簡素、質素です。飾り気のないカスタマイズの土台となれるようなテーマを目指して作りました。
 Theme URI: http://wp-simplicity.com/
 Author: yhira
 Author URI: http://nelog.jp/
-Version: 1.4.0 20150103
+Version: 1.6.1 20150409
 License: GNU General Public License
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
+
+
+/*************************************
+テーマファイルを編集する場合は子テーマを利用して編集することを推奨します。
+http://wp-simplicity.com/downloads/child-theme/
+*************************************/
 
 /************************************
 ** 基本設定（General Setting）
@@ -25,7 +33,7 @@ html, body {
 
 body {
   font-family:
-      'Lucida Grande','Hiragino Kaku Gothic ProN',
+      'Hiragino Kaku Gothic ProN',
       Meiryo, sans-serif;
   font-size:1em;
   /*height:100vh;*/
@@ -251,7 +259,7 @@ dd{
   border: solid 1px #ccc;
 }
 .article th, .article td{
-  padding: 5px 8px;
+  padding: 3px 5px;
 }
 
 .article ol,
@@ -279,6 +287,7 @@ pre {
   background-color:#eee;
   border:1px solid #ccc;
   padding:7px;
+  overflow: auto;
 }
 
 hr{
@@ -345,12 +354,16 @@ hr.sep {
 }
 #header .alignleft{
   margin-left:30px;
-  max-width:770px;
+  /*max-width:700px;*/
 }
 #header .alignright{
-  width: 240px;
+  width: 315px;
+  height: 52px;
   text-align:right;
   margin-right:30px;
+  right: 0;
+  top: 0;
+  position: absolute;
 }
 
 #body{
@@ -374,11 +387,6 @@ hr.sep {
   width: 300px;
 }
 
-#main,
-#sidebar{
-  margin-bottom: 59px;
-}
-
 .clear{
   clear:both;
 }
@@ -396,6 +404,7 @@ hr.sep {
   overflow:hidden;
   background-repeat: no-repeat;
   background-position: top left;
+  position: relative;
 }
 
 #site-title{
@@ -548,7 +557,9 @@ hr.sep {
   width: 30px;
   height: 26px;
   border: none;
-  background: url(images/search.png) no-repeat 50% 50%;
+  /* 画像をBase64にするためコメントアウト
+  background: url("images/search.png") no-repeat 50% 50%; */
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAVCAYAAABG1c6oAAAEIklEQVR42pWVe0xTVxzHf22hFWiBUKjLEiTOjODGq4ArJJiYBV+gWy3YBoegWZysOgsVKYNC8IGhsMIYCLLqRKRkRdwEp4wR/yCZgwbHa8bwCH9sQkt5lceGIax0v3PDJd7MZaHJL72555zP+f6eF5xOJ3R1d4Pp7l342mAAbUEBp/DixagDBw/mh0dGdmzbvv25f0DA88CgoA5FcnLx9draWOXZs7xinQ5WVlZoIxzKGMDb9fXCdKUy21ckWgZcep0JfX2dCL5WVl4udDgcsLq6SuzfwJYHDzyzc3Lagc3eOMwXCJzePj6zAm9vmwefvwYs1sbap0rlT9PT0z52ux3QmMBfe3vhUlHRdXozOfhOcHBfTGzspYTDh5Mk0dHxkRJJQXBoqPlVtedUqrrBwUFWT08PE/j9/fu7PVANrSD52DFjXn7+W1ESCezdvx8ioqIgLCICLmg0b2So1d+gckotb8sWp8lkSjCbzUzgUYWihYBY6K44MnKipbVVoMrMhJDw8A3g20FBgPEF6+Skqywp6TvW+uXxCQmdCHRhAN8NCZmi3VBnZdUUl5QAxhPSTp6EuH37IBTBpxFWUFgIDY2NcFWnO04UEtsRGDhfWVXlzQDiy0V6A8IufJ6XB5eLioCAP5BK4YhMBt+aTHCrrg4MN25A/Z07UkqAi4tTKBLNvx8XJ2QAQ8LCbHQysjWarwYGBqCishJKSksB3YO0EycgV6sFU1MT6PAStFRaQODOnXbDzZs+DGCSXP6IBmIifrdYLPyq6moKeCQxEY6npsJnKhU0Ya1mqtXwSXp6K51AqUzW2W02cxjA5nv39vI9PddIDbI4HOdHKSmG8ooKry/0ejZRmJqWBpnnz7OMjY1eyjNnqnlubg7AfTx39zV9WdmBX7q6mFl+1NYGObm5Dex1IAGHicW9eVptVvyhQ7uOyuW7Pj516nR0TEwvdSnGjsvjOc5lZBhJu6JCJnBkZATGxsbc5ApFm6urq+PVAvfw9CRGINQ7DpdLlRf2+fSkzeY7YbHAHy9eMIFDQ0OU/fbsGV+amKjbFhAwxVkHoGuU0Ze48HhONq75+vn99cPDh/KXy8uwuLj4eiDpaZKMLI3mQ3T1y/diYjowTo8R8nj3nj0d2C3DFBQ7hPxjdVhHR0d3WK3W/waW6vWA4wkw2KQWBeiuFwK9rtXU8Pv6+iRv+vv/iaGglFJtmpLSOT4+zv1f4OUrV0iiwF0gADxMipzaW1Nbq0UgiSXlOnluMBqzNw0knfM3zr2ep0/dsL+pqeO67nqoWDyxKSD5NTU3w89PnsCP7e2kY2QERBvOy5ebAvb398Pc3BzYpqZgZmYG7PPzXBxjDTi9Z4VC4SxOIcOmgDabDZaWlmBhYYGUCHlm47dHL9q6ddhPJBrGCXWVBv4DYbnuWKzr2fcAAAAASUVORK5CYII=") no-repeat 50% 50%;
   z-index:0;
   top:3px;
   right:3px;
@@ -597,10 +608,18 @@ hr.sep {
   margin-top:30px;
 }
 
-.more-link{
+.more-link {
+  clear: both;
+  display: block;
+  margin-bottom: 30px;
+  text-align: right;
+  margin-top: 15px;
+}
+
+/*.more-link{
   float: right;
   margin-bottom:30px;
-}
+}*/
 
 /************************************
 ** index.phpのリスト
@@ -877,7 +896,8 @@ a.page-numbers,
   text-align:center;
 }
 .comment-page-link{
-  margin: 0 0 3em;
+  margin: 1em 1em 3em;
+  text-align: center;
 }
 
 .page-link span,
@@ -1001,6 +1021,11 @@ a.page-numbers,
   padding-left:0;
 }
 
+#comment-area ol ul,
+#comment-area ul ul{
+  margin-left: 1.5em;
+}
+
 .required{ color: #fe56aa;}
 
 .commets-list,
@@ -1051,28 +1076,6 @@ span.small{
 /************************************
 ** 入力フォーム（Form）
 ************************************/
-/*input[type="text"],
-input[type="url"],
-input[type="password"],
-input[type="email"],
-input[type="search"],
-input[type="tel"],
-textarea {
-  margin: 0;
-  margin-bottom: 20px;
-  padding: 6px 4px;
-  max-width: 100%;
-  width: 290px;
-  outline: none;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-  background: #f3f3f3;
-  color: #333;
-  vertical-align: bottom;
-  font-size: 14px;
-  padding:0;
-}*/
-
 input[type="text"],
 input[type="url"],
 input[type="password"],
@@ -1091,8 +1094,7 @@ textarea {
   line-height: 1.42857;
   padding: 6px 12px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-  width: 290px;
-  max-width: 100%;
+  width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1169,7 +1171,7 @@ input[type="button"]:active {
 }
 
 /************************************
-** サイドバー（Sidebar）
+** サイドバー（Sidebar）・ウィジェットなど
 ************************************/
 #sidebar h4{
   margin-bottom: 10px;
@@ -1185,12 +1187,21 @@ input[type="button"]:active {
 
 #sidebar ul,
 #sidebar ol,
+.widget-over-article ul,
+.widget-over-article ol,
 .widget-under-article ul,
 .widget-under-article ol,
+.widget-over-sns-buttons ul,
+.widget-over-sns-buttons ol,
 .widget-under-sns-buttons ul,
 .widget-under-sns-buttons ol{
   padding-left: 1em;
   list-style:none;
+}
+
+.widget-over-article{
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #sidebar-recent-posts li,
@@ -1269,15 +1280,21 @@ span.wpp-views{
   line-height:120%;
   position:relative;
   display:block;
-  max-width:336px;
+  max-width: 440px;/*これを書いておかないと、タイトル部分がはみ出す*/
 }
 
+#new-entries .new-entrys-large .new-entry img,
+#popular-entries .popular-entrys-large .popular-entry img,
 #popular-entries .popular-entrys-large .wpp-list li img{
   width:100%;
   float:none;
   margin:0;
   display:block;
   margin-bottom:5px;
+  min-height: 180px;
+  max-width: 440px;/*iPhone6は幅が414pxなのでそれより大きく*/
+  max-height: 240px;
+  height: auto;
 }
 
 #popular-entries .popular-entrys-large .wpp-list li img.wpp_cached_thumb{
@@ -1291,7 +1308,9 @@ span.wpp-views{
   bottom:0;
   left:0;
   right:0;
-  background: url("images/black-transparent.png") repeat scroll 0 0 transparent;
+  /* 画像をBase64にするためコメントアウト
+  background: url("images/black-transparent.png") repeat scroll 0 0 transparent; */
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAQMAAAAk8RryAAAAA1BMVEUAAACnej3aAAAAAXRSTlOZyTXzhgAAAA1JREFUGNNjGAWDCgAAAZAAAXtlmk8AAAAASUVORK5CYII=") repeat scroll 0 0 transparent;
 /*  opacity:0.7;
   background-color:#333;*/
   padding:10px;
@@ -1309,7 +1328,9 @@ span.wpp-views{
 }
 
 #popular-entries .popular-entrys-large-on .wpp-list li span.wpp-views {
-  background: url("images/black-transparent.png") repeat scroll 0 0 transparent;
+  /* 画像をBase64にするためコメントアウト
+  background: url("images/black-transparent.png") repeat scroll 0 0 transparent; */
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAQMAAAAk8RryAAAAA1BMVEUAAACnej3aAAAAAXRSTlOZyTXzhgAAAA1JREFUGNNjGAWDCgAAAZAAAXtlmk8AAAAASUVORK5CYII=") repeat scroll 0 0 transparent;
   color:#fff;
   opacity:1;
   display:block;
@@ -1394,30 +1415,24 @@ span.wpp-views{
 ************************************/
 #page-top{
   position:fixed;
-  right:16px;
-  bottom:16px;
   display:none;
+  right: 10px;
+  bottom: 10px;
 }
 
 #page-top a{
   color:#fff;
-  padding:8px;
+  padding:7px;
   text-decoration:none;
   display:block;
   cursor:pointer;
   text-align:center;
-  background:#aaa;
+  background-color: #aaa;
   line-height:100%;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size:12px;
 }
 
-#page-top a:hover{
-  background:#8b8b8b;
-  -webkit-transition:all 0.3s;
-  -moz-transition:all 0.3s;
-  transition:all 0.3s;
-}
 
 /************************************
 ** 広告（ads）
@@ -1433,14 +1448,14 @@ span.wpp-views{
 
 .ad-left{
   float:left;
-  margin-right:4px;
+  margin-right:2px;
   width:336px;
 }
 
 
 .ad-right{
   float:right;
-  margin-left:4px;
+  margin-left:2px;
   width:336px;
 }
 
@@ -1467,6 +1482,14 @@ span.wpp-views{
   margin-top:0;
 }
 
+/************************************
+** 非表示にするものまとめ
+************************************/
+.widget-ad,
+.widget-over-article-title,
+.widget-under-article-title,
+.widget-over-sns-buttons-title,
+.widget-under-sns-buttons-title,
 #sidebar .ad-space .ad-label{
  display:none;
 }
@@ -1479,151 +1502,24 @@ span.wpp-views{
 }
 
 #mobile-menu a{
-  color:#fff;
-  padding:4px;
-  width:60px;
+  color:#333;
+  padding: 4px 8px;
   text-decoration:none;
   display:block;
   cursor:pointer;
   text-align:center;
-  background:#aaa;
   line-height:100%;
-  border-radius: 10px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
+  border-radius: 3px;
   position:absolute;
-  right:30px;
-  font-size:10px;
+  right: 7px;
+  font-size: 15px;
+  margin-top: 3px;
 }
 
-#mobile-menu a:hover{
-  background:#8b8b8b;
-  -webkit-transition:all 0.3s;
-  -moz-transition:all 0.3s;
-  transition:all 0.3s;
+#mobile-menu a:hover,
+#page-top a:hover{
+  opacity: 0.7;
 }
-
-/************************************
-** レスポンシブデザインスタイル読込
-************************************/
-
-@media screen and (max-width:1150px){
-  #header-in, #navi-in, #body-in, #footer-in{
-    width:740px;
-  }
-
-  #site-title a{
-    margin-right:120px;
-  }
-
-  #sidebar{
-    clear:both;
-    float:none;
-    padding:15px;
-    width:auto;
-    position:static !important;
-  }
-
-  #footer-widget{
-    display:none;
-  }
-
-  #footer-widget .footer-left,
-  #footer-widget .footer-center,
-  #footer-widget .footer-right{
-    clear:both;
-    width:100%;
-  }
-
-  #sidebar-scroll{
-    display:none;
-  }
-  /************************************
-  ** モバイルメニュー
-  ************************************/
-  #mobile-menu{
-    display:block;
-    position:relative;
-  }
-
-  /************************************
-  ** ヘッダー関係
-  ************************************/
-  #header .menu{
-    display:none;
-  }
-
-  #header .alignright{
-    display:none;
-  }
-
-  /************************************
-  ** メインメニュー
-  ************************************/
-  #navi ul{
-    display:none;
-    border:0;
-  }
-
-  #navi ul li{
-    float:none;
-    display:block;
-    height:auto;
-  }
-
-  #navi ul li a:hover{
-    text-decoration:none;
-    background-color:#ddd;
-  }
-
-  #navi ul li a {
-    font-size: medium;
-    padding: 10px;
-    color: #111;
-  }
-
-  #sidebar .ad-space .ad-label{
-    display:block;
-  }
-
-
-  #navi ul.sub-menu,
-  #navi ul.children{
-    position: relative;
-    width:auto;
-    /*background-color:#777;*/
-    border-width:0;
-  }
-
-  #navi ul.sub-menu ul,
-  #navi ul.children ul {
-    left: 0;
-    top: 0;
-  }
-
-  #navi .sub-menu li,
-  #navi .children li{
-    height:auto;
-    padding-left:50px;
-  }
-
-}
-
-/* 画面幅が1151px以上の時 */
-@media screen and (min-width:1151px){
-  /*#navi ul{display:block}*/
-
-  .ad-sidebar{
-    margin-top:0;
-  }
-
-  #navi ul.sub-menu,
-  #navi ul.children{
-    display:none;
-  }
-
-}
-
 
 /************************************
 ** サムネイルつきポストナビ
@@ -1654,12 +1550,12 @@ border-right:#ddd 1px solid;
   top:-0.8em;
   position:absolute;
   border: 1px #ccc solid;
-  background:#fff;
   text-align: center;
   padding:5px;
   color:#666;
   font-size:28px;
   border-radius:6px;
+  background-color: #fff;
 }
 #prev-next #next-title{
   right:10px;
@@ -1727,4 +1623,60 @@ border-right:#ddd 1px solid;
   margin-top:10px;
    float:right;
    margin-left: 10px;
+}
+
+
+/************************************
+** モバイルモーダルメニュー（animatedModal.js）
+************************************/
+#animatedModal a{
+  color: #fff;
+  text-decoration: none;
+}
+
+.close-animatedModal{
+  text-align: center;
+  font-size: 45px;
+}
+
+.modal-content{
+  max-width: 440px;
+  width: auto;
+  margin: auto;
+}
+
+#animatedModal ul{
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 0;
+  margin-left: 0;
+}
+
+#animatedModal ul li{
+  border: 1px solid #fff;
+  border-radius: 5px;
+  margin: 0 10px 10px;
+}
+
+#animatedModal ul li a{
+  padding: 5px 10px;
+  width: auto;
+  border-radius: 5px;
+  display: block;
+}
+
+#animatedModal ul li a:hover{
+  background-color: #555;
+}
+
+/*Google検索ボックス用*/
+#___gcse_0 .cse .gsc-control-cse,
+#___gcse_0 .gsc-control-cse{
+  background-color: transparent;
+  border: none;
+}
+
+/*SlickNav用スタイル*/
+.slicknav_menu {
+  display: none;
 }

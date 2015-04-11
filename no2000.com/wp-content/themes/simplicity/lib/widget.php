@@ -15,21 +15,29 @@ class SimplicityWidgetItem extends WP_Widget {
         $title_popular = apply_filters( 'widget_title_popular', $instance['title_popular'] );
         //表示数を取得
         $entry_count = apply_filters( 'widget_entry_count', $instance['entry_count'] );
-        $entry_type = apply_filters( 'widget_entry_count', $instance['entry_type'] );
+        //表示タイプ
+        $entry_type = apply_filters( 'widget_entry_type', $instance['entry_type'] );
+        //固定ページを含める
+        $is_pages_include = apply_filters( 'widget_is_pages_include', $instance['is_pages_include'] );
         $is_views_visible = apply_filters( 'widget_is_views_visible', $instance['is_views_visible'] );
         $range = apply_filters( 'range', $instance['range'] );
         $range_visible = apply_filters( 'range_visible', $instance['range_visible'] );
+        $is_ranking_visible = apply_filters( 'is_ranking_visible', $instance['is_ranking_visible'] );
         //表示数をグローバル変数に格納
         //後で使用するテンプレートファイルへの受け渡し
-        global $g_entry_count;
-        //表示タイプをグローバル変数に格納
-        global $g_entry_type;
         //表示数が設定されていない時は5にする
+        global $g_entry_count;
         if ( !$entry_count ) $entry_count = 5;
         $g_entry_count = $entry_count;
         //表示タイプのデフォルト設定
+        global $g_entry_type;
         if ( !$entry_type ) $entry_type ='default';
         $g_entry_type = $entry_type;
+        //固定ページを含めるかのデフォルト設定
+        global $g_is_pages_include;
+        $g_is_pages_include = $is_pages_include;
+        //ページビュー表示に格納
+        global $g_is_views_visible;
         $g_is_views_visible = $is_views_visible;
         global $g_range;
         $g_range = ($range ? $range : 'all');
@@ -44,6 +52,9 @@ class SimplicityWidgetItem extends WP_Widget {
                 echo '人気記事';
               }
                 ?></h4>
+            <?php if ( $is_ranking_visible ) {//ランキングの表示
+              echo get_popular_posts_ranking_style('.widget_new_popular');
+            }  ?>
             <?php if (function_exists('wpp_get_mostpopular') && //Wordpress Popular Postsがインストールされているかどうか
                       is_wpp_enable()) { //Wordpress Popular Postsを?>
               <?php //PV順
@@ -88,9 +99,11 @@ class SimplicityWidgetItem extends WP_Widget {
       $instance['title_popular'] = trim($new_instance['title_popular']);
       $instance['entry_count'] = strip_tags($new_instance['entry_count']);
       $instance['entry_type'] = strip_tags($new_instance['entry_type']);
+      $instance['is_pages_include'] = strip_tags($new_instance['is_pages_include']);
       $instance['is_views_visible'] = strip_tags($new_instance['is_views_visible']);
       $instance['range'] = strip_tags($new_instance['range']);
       $instance['range_visible'] = $new_instance['range_visible'];
+      $instance['is_ranking_visible'] = strip_tags($new_instance['is_ranking_visible']);
         return $instance;
     }
     function form($instance) {
@@ -100,18 +113,22 @@ class SimplicityWidgetItem extends WP_Widget {
             'title_popular' => null,
             'entry_count' => null,
             'entry_type' => null,
+            'is_pages_include' => null,
             'is_views_visible' => null,
             'range' => null,
             'range_visible' => null,
+            'is_ranking_visible' => null,
           );
         }
         $title_new = esc_attr($instance['title_new']);
         $title_popular = esc_attr($instance['title_popular']);
         $entry_count = esc_attr($instance['entry_count']);
         $entry_type = esc_attr($instance['entry_type']);
+        $is_pages_include = esc_attr($instance['is_pages_include']);
         $is_views_visible = esc_attr($instance['is_views_visible']);
         $range = esc_attr($instance['range']);
         $range_visible = esc_attr($instance['range_visible']);
+        $is_ranking_visible = esc_attr($instance['is_ranking_visible']);
         ?>
         <p>
           <label for="<?php echo $this->get_field_id('title_new'); ?>">
@@ -142,6 +159,13 @@ class SimplicityWidgetItem extends WP_Widget {
           <input class="widefat" id="<?php echo $this->get_field_id('entry_type'); ?>" name="<?php echo $this->get_field_name('entry_type'); ?>"  type="radio" value="large_thumb"<?php echo ($entry_type == 'large_thumb' ? ' checked="checked"' : ""); ?> />大きなサムネイル<br />
           <input class="widefat" id="<?php echo $this->get_field_id('entry_type'); ?>" name="<?php echo $this->get_field_name('entry_type'); ?>"  type="radio" value="large_thumb_on"<?php echo ($entry_type == 'large_thumb_on' ? ' checked="checked"' : ""); ?> />タイトルを重ねた大きなサムネイル<br />
         </p>
+        <?php //固定ページの表示 ?>
+        <p>
+          <label for="<?php echo $this->get_field_id('is_pages_include'); ?>">
+          <?php echo('固定ページの表示（Popular Posts）'); ?>
+          </label><br />
+          <input class="widefat" id="<?php echo $this->get_field_id('is_pages_include'); ?>" name="<?php echo $this->get_field_name('is_pages_include'); ?>" type="checkbox" value="on"<?php echo ($is_pages_include ? ' checked="checked"' : ''); ?> />ランキングに固定ページを含める
+        </p>
         <?php //集計単位の指定 ?>
         <p>
           <label for="<?php echo $this->get_field_id('range'); ?>">
@@ -165,6 +189,13 @@ class SimplicityWidgetItem extends WP_Widget {
           <?php echo('閲覧数の表示（Popular Posts）'); ?>
           </label><br />
           <input class="widefat" id="<?php echo $this->get_field_id('is_views_visible'); ?>" name="<?php echo $this->get_field_name('is_views_visible'); ?>" type="checkbox" value="on"<?php echo ($is_views_visible ? ' checked="checked"' : ''); ?> />閲覧数の表示
+        </p>
+        <?php //ランキング順位の表示 ?>
+        <p>
+          <label for="<?php echo $this->get_field_id('is_ranking_visible'); ?>">
+          <?php echo('ランキング順位の表示'); ?>
+          </label><br />
+          <input class="widefat" id="<?php echo $this->get_field_id('is_ranking_visible'); ?>" name="<?php echo $this->get_field_name('is_ranking_visible'); ?>" type="checkbox" value="on"<?php echo ($is_ranking_visible ? ' checked="checked"' : ''); ?> />ランキング順位の表示
         </p>
         <?php
     }
@@ -279,33 +310,51 @@ class SimplicityNewEntryWidgetItem extends WP_Widget {
 add_action('widgets_init', create_function('', 'return register_widget("SimplicityNewEntryWidgetItem");'));
 
 ///////////////////////////////////////////////////
-//カテゴリごとのPopular Postsウイジェットの追加
+//人気記事（Popular Posts）ウイジェットの追加
 ///////////////////////////////////////////////////
 class SimplicityPopularPostsCategoryWidgetItem extends WP_Widget {
 	function SimplicityPopularPostsCategoryWidgetItem() {
-    	parent::WP_Widget(false, $name = 'Simplicityカテゴリー別人気記事（要Popular Postsプラグイン）');
+    	parent::WP_Widget(false, $name = 'Simplicity人気記事（要Popular Postsプラグイン）');
     }
     function widget($args, $instance) {
         extract( $args );
+        //ウィジェットモード（全ての人気記事を表示するか、カテゴリ別に表示するか）
+        $widget_mode = apply_filters( 'widget_mode', $instance['widget_mode'] );
         $title_popular = apply_filters( 'widget_title_popular', $instance['title_popular'] );
         //表示数を取得
         $entry_count = apply_filters( 'widget_entry_count', $instance['entry_count'] );
         //表示タイプを取得
         $entry_type = apply_filters( 'widget_entry_count', $instance['entry_type'] );
+        //固定ページを含める
+        $is_pages_include = apply_filters( 'widget_is_pages_include', $instance['is_pages_include'] );
+        //閲覧数の表示
         $is_views_visible = apply_filters( 'widget_is_views_visible', $instance['is_views_visible'] );
+        //集計期間
         $range = apply_filters( 'range', $instance['range'] );
+        //集計期間の表示
         $range_visible = apply_filters( 'range_visible', $instance['range_visible'] );
-        //表示数をグローバル変数に格納
+        //ランキング順位の表示
+        $is_ranking_visible = apply_filters( 'is_ranking_visible', $instance['is_ranking_visible'] );
         //後で使用するテンプレートファイルへの受け渡し
+        //ウィジェットモード
+        global $g_widget_mode;
+        //表示数をグローバル変数に格納
         global $g_entry_count;
         //表示タイプをグローバル変数に格納
         global $g_entry_type;
+        //ウィジェットモードが設定されてない場合はall（全て表示）にする
+        if ( !$widget_mode ) $widget_mode = 'all';
+        $g_widget_mode = $widget_mode;
         //表示数が設定されていない時は5にする
         if ( !$entry_count ) $entry_count = 5;
         $g_entry_count = $entry_count;
         //表示タイプのデフォルト設定
         if ( !$entry_type ) $entry_type ='default';
         $g_entry_type = $entry_type;
+        //固定ページを含めるかのデフォルト設定
+        global $g_is_pages_include;
+        $g_is_pages_include = $is_pages_include;
+        //ページビュー表示に格納
         global $g_is_views_visible;
         $g_is_views_visible = $is_views_visible;
         global $g_range;
@@ -313,14 +362,22 @@ class SimplicityPopularPostsCategoryWidgetItem extends WP_Widget {
         global $g_widget_item;
         $g_widget_item = 'SimplicityPopularPostsCategoryWidgetItem';
     	?>
-        <?php if ( is_single() || is_category() )://投稿ページとカテゴリーページのとき ?>
-          <div id="popular-entries" class="widget widget_category_popular">
+        <?php if ( $widget_mode == 'all' || //モードがウィジェットモードが「すべての人気記事表示」の時
+                   is_single() || is_category() )://投稿ページとカテゴリーページのとき ?>
+          <div id="popular-entries" class="widget widget_category_popular widget_popular_ranking">
             <h4><?php if ($title_popular) {
               echo $title_popular;
             } else {
-              echo 'カテゴリー別人気記事';
+              if ( $widget_mode == 'all' ) {//全ての表示モードの時は
+                echo '人気記事';
+              } else {
+                echo 'カテゴリー別人気記事';
+              }
             }
               ?></h4>
+            <?php if ( $is_ranking_visible ) {//ランキングの表示
+              echo get_popular_posts_ranking_style('.widget_popular_ranking');//問題なければいずれ消す[TODO]
+            }  ?>
             <?php //PV順
             if ( $entry_type == 'default' ) {
               get_template_part('popular-posts-entries');
@@ -336,33 +393,50 @@ class SimplicityPopularPostsCategoryWidgetItem extends WP_Widget {
     }
     function update($new_instance, $old_instance) {
       $instance = $old_instance;
+      $instance['widget_mode'] = trim(strip_tags($new_instance['widget_mode']));
       $instance['title_popular'] = trim(strip_tags($new_instance['title_popular']));
       $instance['entry_count'] = strip_tags($new_instance['entry_count']);
       $instance['entry_type'] = strip_tags($new_instance['entry_type']);
+      $instance['is_pages_include'] = strip_tags($new_instance['is_pages_include']);
       $instance['is_views_visible'] = $new_instance['is_views_visible'];
       $instance['range'] = $new_instance['range'];
       $instance['range_visible'] = $new_instance['range_visible'];
+      $instance['is_ranking_visible'] = strip_tags($new_instance['is_ranking_visible']);
         return $instance;
     }
     function form($instance) {
         if(empty($instance)){
           $instance = array(
+            'widget_mode' => null,
             'title_popular' => null,
             'entry_count' => null,
             'entry_type' => null,
+            'is_pages_include' => null,
             'is_views_visible' => null,
             'range' => null,
             'range_visible' => null,
+            'is_ranking_visible' => null,
           );
         }
+        $widget_mode = esc_attr($instance['widget_mode']);
         $title_popular = esc_attr($instance['title_popular']);
         $entry_count = esc_attr($instance['entry_count']);
         $entry_type = esc_attr($instance['entry_type']);
+        $is_pages_include = esc_attr($instance['is_pages_include']);
         $is_views_visible = esc_attr($instance['is_views_visible']);
         $range = esc_attr($instance['range']);
         $range_visible = esc_attr($instance['range_visible']);
+        $is_ranking_visible = esc_attr($instance['is_ranking_visible']);
         ?>
 
+        <?php //ウィジェットモード（全てか、カテゴリ別か） ?>
+        <p>
+          <label for="<?php echo $this->get_field_id('widget_mode'); ?>">
+          <?php echo('表示モード'); ?>
+          </label><br />
+          <input class="widefat" id="<?php echo $this->get_field_id('widget_mode'); ?>" name="<?php echo $this->get_field_name('widget_mode'); ?>"  type="radio" value="all" <?php echo ( ($widget_mode == 'all' || !$widget_mode ) ? ' checked="checked"' : ""); ?> />全ての人気記事（全ページで表示）<br />
+          <input class="widefat" id="<?php echo $this->get_field_id('widget_mode'); ?>" name="<?php echo $this->get_field_name('widget_mode'); ?>"  type="radio" value="category"<?php echo ($widget_mode == 'category' ? ' checked="checked"' : ""); ?> />カテゴリ別人気記事（投稿・カテゴリで表示）<br />
+        </p>
         <p>
            <label for="<?php echo $this->get_field_id('title_popular'); ?>">
            <?php echo('人気記事のタイトル'); ?>
@@ -384,6 +458,13 @@ class SimplicityPopularPostsCategoryWidgetItem extends WP_Widget {
           <input class="widefat" id="<?php echo $this->get_field_id('entry_type'); ?>" name="<?php echo $this->get_field_name('entry_type'); ?>"  type="radio" value="default" <?php echo ( ($entry_type == 'default' || !$entry_type ) ? ' checked="checked"' : ""); ?> />デフォルト<br />
           <input class="widefat" id="<?php echo $this->get_field_id('entry_type'); ?>" name="<?php echo $this->get_field_name('entry_type'); ?>"  type="radio" value="large_thumb"<?php echo ($entry_type == 'large_thumb' ? ' checked="checked"' : ""); ?> />大きなサムネイル<br />
           <input class="widefat" id="<?php echo $this->get_field_id('entry_type'); ?>" name="<?php echo $this->get_field_name('entry_type'); ?>"  type="radio" value="large_thumb_on"<?php echo ($entry_type == 'large_thumb_on' ? ' checked="checked"' : ""); ?> />タイトルを重ねた大きなサムネイル<br />
+        </p>
+        <?php //固定ページの表示 ?>
+        <p>
+          <label for="<?php echo $this->get_field_id('is_pages_include'); ?>">
+          <?php echo('固定ページの表示'); ?>
+          </label><br />
+          <input class="widefat" id="<?php echo $this->get_field_id('is_pages_include'); ?>" name="<?php echo $this->get_field_name('is_pages_include'); ?>" type="checkbox" value="on"<?php echo ($is_pages_include ? ' checked="checked"' : ''); ?> />ランキングに固定ページを含める
         </p>
         <?php //集計単位の指定 ?>
         <p>
@@ -408,6 +489,13 @@ class SimplicityPopularPostsCategoryWidgetItem extends WP_Widget {
           <?php echo('閲覧数の表示'); ?>
           </label><br />
           <input class="widefat" id="<?php echo $this->get_field_id('is_views_visible'); ?>" name="<?php echo $this->get_field_name('is_views_visible'); ?>" type="checkbox" value="on"<?php echo ($is_views_visible ? ' checked="checked"' : ''); ?> />閲覧数の表示
+        </p>
+        <?php //ランキング順位の表示 ?>
+        <p>
+          <label for="<?php echo $this->get_field_id('is_ranking_visible'); ?>">
+          <?php echo('ランキング順位の表示'); ?>
+          </label><br />
+          <input class="widefat" id="<?php echo $this->get_field_id('is_ranking_visible'); ?>" name="<?php echo $this->get_field_name('is_ranking_visible'); ?>" type="checkbox" value="on"<?php echo ($is_ranking_visible ? ' checked="checked"' : ''); ?> />ランキング順位の表示
         </p>
         <?php
     }
@@ -454,7 +542,7 @@ class SimplicitySocialFollowWidgetItem extends WP_Widget {
             ?></h4>
           <?php get_template_part('sns-pages'); //SNSフォローボタン?>
         </div>
-      
+
     <?php
     }
     function update($new_instance, $old_instance) {
@@ -481,3 +569,31 @@ class SimplicitySocialFollowWidgetItem extends WP_Widget {
 }
 add_action('widgets_init', create_function('', 'return register_widget("SimplicitySocialFollowWidgetItem");'));
 
+function get_popular_posts_ranking_style($slelctor){
+  return '<style>
+'.$slelctor.' {
+  counter-reset: wpp-ranking;
+}
+
+'.$slelctor.' ul li{
+  position: relative;
+}
+
+'.$slelctor.' ul li:before {
+  background: none repeat scroll 0 0 #666;
+  color: #fff;
+  content: counter(wpp-ranking, decimal);
+  counter-increment: wpp-ranking;
+  font-size: 75%;
+  left: 0;
+  top: 3px;
+  line-height: 1;
+  padding: 4px 7px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0.9;
+  border-radius: 2px;
+  font-family: Arial;
+}
+</style>';
+}

@@ -16,3 +16,7 @@ function get_hatebu_url($url){
   return 'http://b.hatena.ne.jp/entry/'.$u;
 }
 
+//Twitter IDを含めるURLパラメータを取得
+function get_twitter_via_param(){
+  return (is_twitter_id_include() ? '&via='.get_twitter_follow_id() : '');
+}
