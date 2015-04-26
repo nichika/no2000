@@ -25,7 +25,6 @@
         </div>
         <div class="clear"></div>
           <div id="copyright" class="wrapper">
-            WordPress Theme <a href="http://wp-simplicity.com/" rel="nofollow">Simplicity</a><br />
 
             <?php echo get_site_license(); //サイトのライセンス表記の取得 ?>
 
